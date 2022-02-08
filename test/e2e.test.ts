@@ -1,6 +1,9 @@
 import { test } from '@jest/globals';
 import Puppeteer from 'puppeteer';
 
+//TODO hot module reload for quick feedback cycle
+//TODO proper stack traces for unhandled promise rejections
+
 test('a customer is able to add a product to the shopping cart', async () => {
   const browser = await Puppeteer.launch();
   const page = await browser.newPage();
