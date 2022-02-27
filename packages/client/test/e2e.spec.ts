@@ -6,7 +6,7 @@ import Puppeteer, { Browser } from "puppeteer";
 let browser: Browser;
 beforeAll(async () => {
   browser = await Puppeteer.launch();
-});
+}, 60 * 1000);
 
 afterAll(() => {
   return browser.close();
@@ -22,7 +22,7 @@ test(
     expect(addToCart).not.toBeNull();
     await addToCart!.click();
 
-    expect(await page.$("aria/1 items in cart")).not.toBeNull();
+    expect(await page.waitForSelector("aria/1 items in cart")).not.toBeNull();
   },
   60 * 1000
 );
