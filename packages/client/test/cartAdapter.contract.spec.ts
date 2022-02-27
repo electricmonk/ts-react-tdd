@@ -11,8 +11,10 @@ const adapters: Array<[string, CartAdapter]> = [
 
 describe.each(adapters)("The %s cart adapter", (_, cartAdapter) => {
   it("initializes the count with 0 and adds one item", async () => {
-    expect(await cartAdapter.getCount()).toBe(0);
-    await cartAdapter.addItem();
-    expect(await cartAdapter.getCount()).toBe(1);
+    const cartId = new Date().toString();
+
+    expect(await cartAdapter.getCount(cartId)).toBe(0);
+    await cartAdapter.addItem(cartId);
+    expect(await cartAdapter.getCount(cartId)).toBe(1);
   });
 });

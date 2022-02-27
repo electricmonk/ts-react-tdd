@@ -3,13 +3,16 @@ import cors from "cors";
 
 const app = express();
 const router = express.Router();
-let count = 0;
-router.get("/cart", (_, res) => {
-  res.json(count);
+const sessions: Record<string, number> = {};
+
+router.get("/cart/:cartId", (req, res) => {
+  const { cartId } = req.params;
+  res.json(sessions[cartId] || 0);
 });
 
-router.post("/cart", (_, res) => {
-  count++;
+router.post("/cart/:cartId", (req, res) => {
+  const { cartId } = req.params;
+  sessions[cartId] = sessions[cartId] ? sessions[cartId] + 1 : 1;
   res.end();
 });
 

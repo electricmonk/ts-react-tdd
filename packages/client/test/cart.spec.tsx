@@ -6,7 +6,9 @@ import { InMemoryCartAdapter } from "../src/adapters/cart";
 describe("The cart", () => {
   it("initialized as empty and then reflects an item being added", async () => {
     const cartAdapter = new InMemoryCartAdapter();
-    const app = render(<Shop cartAdapter={cartAdapter} />);
+    const app = render(
+      <Shop cartAdapter={cartAdapter} cartId={new Date().toString()} />
+    );
     app.getByText("0 items in cart");
 
     const add = app.getByText("Add");

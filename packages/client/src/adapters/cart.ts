@@ -1,22 +1,26 @@
 import axios from "axios";
 export interface CartAdapter {
-  getCount: () => Promise<number>;
-  addItem: () => Promise<void>;
+  getCount: (cartId: string) => Promise<number>;
+  addItem: (cartId: string) => Promise<void>;
 }
 export class InMemoryCartAdapter {
-  #count = 0;
+  #sessions: Record<string, number> = {};
 
-  async addItem() {
-    this.#count++;
+  async addItem(cartId: string) {
+    this.#sessions[cartId] = this.#sessions[cartId]
+      ? this.#sessions[cartId]++
+      : 1;
   }
 
-  async getCount() {
-    return this.#count;
+  async getCount(cartId: string) {
+    return this.#sessions[cartId] || 0;
   }
 }
 
 export class HTTPCartAdapter {
   constructor(private url: string) {}
-  addItem = async () => (await axios.post<void>(`${this.url}/cart`)).data;
-  getCount = async () => (await axios.get<number>(`${this.url}/cart`)).data;
+  addItem = async (cartId: string) =>
+    (await axios.post<void>(`${this.url}/cart/${cartId}`)).data;
+  getCount = async (cartId: string) =>
+    (await axios.get<number>(`${this.url}/cart/${cartId}`)).data;
 }

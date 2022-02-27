@@ -3,17 +3,18 @@ import { CartAdapter } from "../adapters/cart";
 
 interface ShopProps {
   cartAdapter: CartAdapter;
+  cartId: string;
 }
 
-export const Shop: React.FC<ShopProps> = ({ cartAdapter }) => {
+export const Shop: React.FC<ShopProps> = ({ cartAdapter, cartId }) => {
   const [itemCount, setItemCount] = useState<number>(0);
   const addItem = async () => {
-    await cartAdapter.addItem();
-    setItemCount(await cartAdapter.getCount());
+    await cartAdapter.addItem(cartId);
+    setItemCount(await cartAdapter.getCount(cartId));
   };
 
   useEffect(() => {
-    cartAdapter.getCount().then(setItemCount);
+    cartAdapter.getCount(cartId).then(setItemCount);
   }, []);
 
   return (
