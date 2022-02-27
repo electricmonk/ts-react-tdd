@@ -1,15 +1,8 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
+import { Shop } from "./Shop";
+import InMemoryCartAdapter from "../adapters/cart";
 
+const cartAdapter = new InMemoryCartAdapter();
 export const App: React.FC = () => {
-  const [itemCount, setItemCount] = useState<number>(0);
-  const addItem = () => setItemCount(itemCount + 1);
-
-  return (
-    <>
-      <button onClick={addItem} aria-label="Add to cart" role="button">
-        Add
-      </button>
-      <p aria-label={`${itemCount} item in cart`}>{itemCount} items in cart</p>;
-    </>
-  );
+  return <Shop cartAdapter={cartAdapter} />;
 };

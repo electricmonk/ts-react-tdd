@@ -22,7 +22,7 @@ test(
     expect(addToCart).not.toBeNull();
     await addToCart!.click();
 
-    expect(await page.$("aria/1 item in cart")).not.toBeNull();
+    expect(await page.$("aria/1 items in cart")).not.toBeNull();
   },
   60 * 1000
 );
