@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-interface CartAdapter {
-  getCount: () => Promise<number>;
-  addItem: () => Promise<void>;
-}
+import { CartAdapter } from "../adapters/cart";
 
 interface ShopProps {
   cartAdapter: CartAdapter;
