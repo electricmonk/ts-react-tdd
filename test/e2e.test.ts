@@ -20,7 +20,6 @@ test(
 
     const addToCart = await page.$("aria/Add to cart");
     expect(addToCart).not.toBeNull();
-
     await addToCart!.click();
 
     expect(await page.$("aria/1 item in cart")).not.toBeNull();
