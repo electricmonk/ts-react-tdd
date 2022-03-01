@@ -1,4 +1,6 @@
 import axios from "axios";
+import { ProductCount } from "@ts-react-tdd/server";
+
 export interface CartAdapter {
   getCount: (cartId: string) => Promise<number>;
   addItem: (cartId: string) => Promise<void>;
@@ -12,7 +14,7 @@ export class InMemoryCartAdapter {
       : 1;
   }
 
-  async getCount(cartId: string) {
+  async getCount(cartId: string): Promise<ProductCount> {
     return this.#sessions[cartId] || 0;
   }
 }

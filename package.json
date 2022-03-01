@@ -9,5 +9,8 @@
     "invoke": "FORCE_COLOR=1 lerna run --parallel",
     "dev": "yarn invoke dev",
     "test": "yarn invoke test"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
