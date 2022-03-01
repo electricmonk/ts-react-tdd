@@ -5,6 +5,8 @@ const app = express();
 const router = express.Router();
 const sessions: Record<string, number> = {};
 
+export type ProductCount = number;
+
 router.get("/cart/:cartId", (req, res) => {
   const { cartId } = req.params;
   res.json(sessions[cartId] || 0);
