@@ -1,0 +1,13 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "invoke": "FORCE_COLOR=1 lerna run --parallel",
+    "dev": "yarn invoke dev",
+    "test": "yarn invoke test"
+  }
+}
