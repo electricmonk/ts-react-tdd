@@ -1,5 +1,5 @@
 {
-  "name": "ts-react-tdd",
+  "name": "@ts-react-tdd/client",
   "version": "1.0.0",
   "description": "typescript fullstack tdd demo project",
   "main": "index.js",
