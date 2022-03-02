@@ -6,8 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode production",
-    "dev": "API_URL=http://localhost:8080 webpack serve --mode development",
-    "serve:ci": "API_URL=http://localhost:8080 webpack serve"
+    "dev": "API_URL=http://localhost:8080 webpack serve --mode development"
   },
   "author": "",
   "license": "ISC",
@@ -21,17 +20,17 @@
     "jest": "^27.4.7",
     "puppeteer": "^13.1.2",
     "ts-jest": "^27.1.3",
-    "webpack-dev-server": "^4.7.4"
-  },
-  "dependencies": {
-    "axios": "^0.26.0",
-    "js-cookie": "^3.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "webpack-dev-server": "^4.7.4",
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.5",
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "axios": "^0.26.0",
+    "js-cookie": "^3.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }
