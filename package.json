@@ -8,6 +8,7 @@
     "bootstrap": "lerna bootstrap",
     "invoke": "FORCE_COLOR=1 lerna run --parallel",
     "dev": "yarn invoke dev",
+    "serve:ci": "yarn invoke serve:ci",
     "test": "yarn invoke test"
   }
 }

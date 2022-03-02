@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode production",
-    "dev": "API_URL=http://localhost:8080 webpack serve --mode development"
+    "dev": "API_URL=http://localhost:8080 webpack serve --mode development",
+    "serve:ci": "API_URL=http://localhost:8080 webpack serve"
   },
   "author": "",
   "license": "ISC",
