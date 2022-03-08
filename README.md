@@ -4,7 +4,13 @@ This repository aims to serve as an opinionated example for a modern day full-st
 ### Technological Choices
 We aim to justify our technological choices, as we believe that *why* is a very important question one should ask itself with regards to software one uses.
 
-#### Yarn
+#### Yarn + Yarn Workspaces
+
+Yarn comes with several built-in features such as interactive upgrades, the ability to run scripts without using the `run` keyword and a plug-and-play feature for faster installation times (which we currently don't ustilize).
+
+We're using yarn workspaces in order to manage dependencies across different packages and hoist all the dependencies to the root level of the project.
+
+Both Yarn and NPM have proven a similar level of maturity, however a slightly more convenient ergonimics and overall developer experienced have made us choose Yarn as our current package and workspace manager.
 
 #### Lerna
 
