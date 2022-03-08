@@ -10,6 +10,9 @@ We aim to justify our technological choices, as we believe that *why* is a very 
 
 #### TypeScript
 
+Choosing typescript will provide an abundance of self-generated documentation, while maintaining dependencies between different parts of the code both for new features and refactors.
+
+Using typescript will reduce the amount of potential runtime validations, force us to think about the structure and necessety of each part and will help us answer various questions in the realm of YAGNI.
 #### React
 
 #### Jest
