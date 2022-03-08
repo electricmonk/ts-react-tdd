@@ -8,6 +8,12 @@ We aim to justify our technological choices, as we believe that *why* is a very 
 
 #### Lerna
 
+Lerna is a very thin layer on top of Yarn Workspaces which allows us to easily streamline and unify versions between packages, while also executing packages simultaneously.
+
+The packages that are executed together, emit their output into the same buffer with their respective names.
+
+We chose Lerna as it is a minimal solution that elevates Yarn workspaces - our choice for the workspace manager of this project.
+
 #### TypeScript
 
 #### React
