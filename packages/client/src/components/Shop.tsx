@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { CartAdapter } from "../adapters/cart";
-import {useNavigate} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {CartAdapter} from "../adapters/cart";
 
 interface ShopProps {
   cartAdapter: CartAdapter;
   cartId: string;
+  navigate: (to: string) => void;
 }
 
-export const Shop: React.FC<ShopProps> = ({ cartAdapter, cartId }) => {
+export const Shop: React.FC<ShopProps> = ({ cartAdapter, cartId, navigate }) => {
   const [itemCount, setItemCount] = useState<number>(0);
   const addItem = async () => {
     await cartAdapter.addItem(cartId);
@@ -17,8 +17,6 @@ export const Shop: React.FC<ShopProps> = ({ cartAdapter, cartId }) => {
   useEffect(() => {
     cartAdapter.getCount(cartId).then(setItemCount);
   }, []);
-
-  const navigate = useNavigate();
 
   const viewCart = () => {
     navigate('/cart');

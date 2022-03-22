@@ -1,15 +1,14 @@
 import {CartAdapter} from "../adapters/cart";
 import React from "react";
-import {useNavigate} from "react-router-dom";
 
 interface CartProps {
     cartAdapter: CartAdapter;
     cartId: string;
+    navigate: (to: string) => void;
+
 }
 
-export const Cart: React.FC<CartProps> = ({cartId, cartAdapter}) => {
-
-    const navigate = useNavigate();
+export const Cart: React.FC<CartProps> = ({cartId, cartAdapter, navigate}) => {
 
     const checkout = () => {
         navigate("/order-summary")
