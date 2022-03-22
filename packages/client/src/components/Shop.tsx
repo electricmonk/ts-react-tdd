@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {CartAdapter} from "../adapters/cart";
-import {Product, ProductCatalog} from "../adapters/productCatalog";
+import { ProductCatalog} from "../adapters/productCatalog";
 import {useNavigate} from "react-router-dom";
+import {Product} from "@ts-react-tdd/server/types";
 
 interface ShopProps {
     cartAdapter: CartAdapter;
@@ -30,6 +31,9 @@ export const Shop: React.FC<ShopProps> = ({cartAdapter, cartId, productCatalog})
 
     return (
         <section>
+            <p aria-label={`${itemCount} items in cart`}>{itemCount} items in cart</p>
+            {itemCount && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
+
             {products.map(({title, id}) => <div key={id} aria-label={title}>
                 <h3>{title}</h3>
                 <button onClick={() => addItem(id)} aria-label="Add to cart" role="button">
@@ -37,8 +41,7 @@ export const Shop: React.FC<ShopProps> = ({cartAdapter, cartId, productCatalog})
                 </button>
             </div>)}
 
-            <p aria-label={`${itemCount} items in cart`}>{itemCount} items in cart</p>
-            {itemCount && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
+
         </section>
     );
 };

@@ -1,5 +1,4 @@
-import axios from "axios";
-import {Product} from "./productCatalog";
+import {Product} from "@ts-react-tdd/server/types";
 
 export interface CartAdapter {
     getCount: (cartId: string) => Promise<number>;
@@ -7,16 +6,3 @@ export interface CartAdapter {
     checkout: (cartId: string) => Promise<string>;
 }
 
-export class HTTPCartAdapter implements CartAdapter {
-    constructor(private url: string) {
-    }
-
-    addItem = async (cartId: string) =>
-        (await axios.post<void>(`${this.url}/cart/${cartId}`)).data;
-    getCount = async (cartId: string) =>
-        (await axios.get<number>(`${this.url}/cart/${cartId}`)).data;
-
-    checkout = (cartId: string) => {
-        throw new Error("not implemented")
-    }
-}
