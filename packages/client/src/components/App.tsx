@@ -1,8 +1,9 @@
 import React from "react";
-import {Route, Routes, useNavigate} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import {Shop} from "./Shop";
 import Cookies from "js-cookie";
-import {CartAdapter, HTTPCartAdapter} from "../adapters/cart";
+import {HTTPCartAdapter} from "../adapters/cart";
+import {Cart} from "./Cart";
 
 let cartId = Cookies.get("cartId");
 if (!cartId) {
@@ -23,20 +24,3 @@ export const App: React.FC = () => {
     </Routes>
 }
 
-interface CartProps {
-    cartAdapter: CartAdapter;
-    cartId: string;
-}
-
-const Cart: React.FC<CartProps> = ({cartId, cartAdapter}) => {
-
-    const navigate = useNavigate();
-
-    const checkout = () => {
-        navigate("/order-summary")
-    }
-
-    return <section>
-        <button aria-label="Checkout" role="button" onClick={checkout}>Checkout</button>
-    </section>
-}
