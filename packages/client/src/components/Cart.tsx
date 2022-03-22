@@ -1,17 +1,19 @@
 import {CartAdapter} from "../adapters/cart";
 import React from "react";
+import {useNavigate} from "react-router-dom";
 
 interface CartProps {
     cartAdapter: CartAdapter;
     cartId: string;
-    navigate: (to: string) => void;
 
 }
 
-export const Cart: React.FC<CartProps> = ({cartId, cartAdapter, navigate}) => {
+export const Cart: React.FC<CartProps> = ({cartId, cartAdapter}) => {
+    const navigate = useNavigate();
 
-    const checkout = () => {
-        navigate("/order-summary")
+    const checkout = async () => {
+         const orderId = await cartAdapter.checkout(cartId)
+        navigate("/order-summary/" + orderId)
     }
 
     return <section>

@@ -13,12 +13,12 @@ afterAll(() => {
 });
 
 test(
-  "a customer is able to add a product to the shopping cart",
+  "a customer is able to buy a product",
   async () => {
     const page = await browser.newPage();
     await page.goto("http://localhost:3000");
 
-    const addToCart = await page.$("aria/Add to cart");
+    const addToCart = await page.waitForSelector("aria/Add to cart");
     expect(addToCart).not.toBeNull();
     await addToCart!.click();
 

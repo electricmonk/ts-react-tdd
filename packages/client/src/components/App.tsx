@@ -1,29 +1,37 @@
-import React from "react";
-import {Route, Routes, useNavigate} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Route, Routes} from "react-router-dom";
 import {Shop} from "./Shop";
 import Cookies from "js-cookie";
-import {HTTPCartAdapter} from "../adapters/cart";
+import {CartAdapter} from "../adapters/cart";
 import {Cart} from "./Cart";
+import {ProductCatalog} from "../adapters/productCatalog";
+import {OrderSummary} from "./OrderSummary";
+import {OrderAdapter} from "../adapters/order";
 
-let cartId = Cookies.get("cartId");
-if (!cartId) {
-    cartId = new Date().getTime().toString();
-    Cookies.set("cartId", cartId);
-}
-
-const config = {
-    apiUrl: process.env.API_URL!,
+interface AppProps {
+    cartAdapter: CartAdapter,
+    catalog: ProductCatalog,
+    orderAdapter: OrderAdapter
 };
 
-const cartAdapter = new HTTPCartAdapter(config.apiUrl);
-export const App: React.FC = () => {
+export const App: React.FC<AppProps> = ({cartAdapter, catalog, orderAdapter}) => {
 
-    const navigate = useNavigate();
+    const [cartId, setCartId] = useState<string | null>(null);
+    useEffect(() => {
+        setCartId(new Date().getTime().toString());
+    }, []);
+
+    useEffect(() => {
+        if (cartId) {
+            Cookies.set("cartId", cartId);
+        }
+    }, [cartId]);
 
     return <Routes>
-        <Route path="/" element={<Shop cartAdapter={cartAdapter} cartId={cartId!} navigate={navigate}/>} />
-        <Route path="/cart" element={<Cart cartAdapter={cartAdapter} cartId={cartId!} navigate={navigate}/>} />
-        <Route path="/order-summary" element={<section><h2 aria-label="Thank You">Thank you</h2></section>} />
+        <Route path="/" element={<Shop cartAdapter={cartAdapter} cartId={cartId!}
+                                       productCatalog={catalog}/>}/>
+        <Route path="/cart" element={<Cart cartAdapter={cartAdapter} cartId={cartId!}/>}/>
+        <Route path="/order-summary/:orderId" element={<OrderSummary orderAdapter={orderAdapter}/>}/>
     </Routes>
 }
 

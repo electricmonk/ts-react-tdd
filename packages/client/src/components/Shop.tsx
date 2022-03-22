@@ -1,34 +1,44 @@
 import React, {useEffect, useState} from "react";
 import {CartAdapter} from "../adapters/cart";
+import {Product, ProductCatalog} from "../adapters/productCatalog";
+import {useNavigate} from "react-router-dom";
 
 interface ShopProps {
-  cartAdapter: CartAdapter;
-  cartId: string;
-  navigate: (to: string) => void;
+    cartAdapter: CartAdapter;
+    productCatalog: ProductCatalog
+    cartId: string;
 }
 
-export const Shop: React.FC<ShopProps> = ({ cartAdapter, cartId, navigate }) => {
-  const [itemCount, setItemCount] = useState<number>(0);
-  const addItem = async () => {
-    await cartAdapter.addItem(cartId);
-    setItemCount(await cartAdapter.getCount(cartId));
-  };
+export const Shop: React.FC<ShopProps> = ({cartAdapter, cartId, productCatalog}) => {
+    const [itemCount, setItemCount] = useState<number>(0);
+    const [products, setProducts] = useState<Product[]>([])
+    const addItem = async (productId: Product["id"]) => {
+        await cartAdapter.addItem(cartId, productId);
+        setItemCount(await cartAdapter.getCount(cartId));
+    };
 
-  useEffect(() => {
-    cartAdapter.getCount(cartId).then(setItemCount);
-  }, []);
+    const navigate = useNavigate();
 
-  const viewCart = () => {
-    navigate('/cart');
-  }
+    useEffect(() => {
+        cartAdapter.getCount(cartId).then(setItemCount);
+        productCatalog.findAllProducts().then(setProducts)
+    }, []);
 
-  return (
-    <section>
-      <button onClick={addItem} aria-label="Add to cart" role="button">
-        Add
-      </button>
-      <p aria-label={`${itemCount} items in cart`}>{itemCount} items in cart</p>
-      {itemCount && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
-    </section>
-  );
+    const viewCart = () => {
+        navigate('/cart');
+    }
+
+    return (
+        <section>
+            {products.map(({title, id}) => <div key={id} aria-label={title}>
+                <h3>{title}</h3>
+                <button onClick={() => addItem(id)} aria-label="Add to cart" role="button">
+                    Add
+                </button>
+            </div>)}
+
+            <p aria-label={`${itemCount} items in cart`}>{itemCount} items in cart</p>
+            {itemCount && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
+        </section>
+    );
 };
