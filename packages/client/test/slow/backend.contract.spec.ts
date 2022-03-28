@@ -1,15 +1,15 @@
-import {CartAdapter,} from "../src/adapters/cart";
-import {InMemoryShopBackend} from "../src/adapters/inMemoryShopBackend";
+import {CartAdapter,} from "../../src/adapters/cart";
+import {InMemoryShopBackend} from "../../src/adapters/inMemoryShopBackend";
 import {nanoid} from "nanoid";
-import {aProduct, ProductCatalog} from "../src/adapters/productCatalog";
-import {OrderAdapter} from "../src/adapters/order";
-import {HTTPShopBackend} from "../src/adapters/HTTPShopBackend";
+import {ProductCatalog} from "../../src/adapters/productCatalog";
+import {OrderAdapter} from "../../src/adapters/order";
+import {HTTPShopBackend} from "../../src/adapters/HTTPShopBackend";
 import axios from "axios";
-import {Product} from "@ts-react-tdd/server/types";
+import {aProduct, Product} from "@ts-react-tdd/server/types";
 
 interface Harness {
   backend: OrderAdapter & ProductCatalog & CartAdapter,
-  createProduct: (product: Product) => Promise<void>
+  createProduct: (product: Omit<Product, "id">) => Promise<Product>
 }
 
 const adapters: Array<[string, () => Harness]> = [
@@ -22,7 +22,8 @@ const adapters: Array<[string, () => Harness]> = [
     return {
       backend: new HTTPShopBackend(url),
       createProduct: async (product) => {
-        await axios.post<void>(`${url}/products/`, product);
+        const res = await axios.post<Product>(`${url}/products/`, product);
+        return res.data;
       }
     }
   }],
@@ -33,8 +34,7 @@ describe.each(adapters)("The %s shop adapter", (_, backendFactory) => {
   it("creates an order from a cart", async () => {
     const {backend, createProduct } = backendFactory();
     const cartId = nanoid();
-    const product = aProduct();
-    await createProduct(product);
+    const product = await createProduct(aProduct());
     await backend.addItem(cartId, product.id);
     expect(await backend.getCount(cartId)).toEqual(1)
 
@@ -49,13 +49,11 @@ describe.each(adapters)("The %s shop adapter", (_, backendFactory) => {
   it("finds all products", async () => {
     const {backend, createProduct } = backendFactory();
 
-    const product1 = aProduct();
-    const product2 = aProduct();
-    await createProduct(product1);
-    await createProduct(product2);
+    const p1 = await createProduct(aProduct());
+    const p2 = await createProduct(aProduct());
 
     const products = await backend.findAllProducts();
-    expect(products).toContainEqual(expect.objectContaining(product1))
-    expect(products).toContainEqual(expect.objectContaining(product2))
+    expect(products).toContainEqual(expect.objectContaining(p1))
+    expect(products).toContainEqual(expect.objectContaining(p2))
   })
 });
