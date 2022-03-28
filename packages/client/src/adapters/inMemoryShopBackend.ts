@@ -1,7 +1,7 @@
 import { OrderAdapter} from "./order";
 import { ProductCatalog} from "./productCatalog";
 import {CartAdapter} from "./cart";
-import {Order, Product } from "@ts-react-tdd/server/types";
+import {Order, Product } from "@ts-react-tdd/server/src/types";
 import {nanoid} from "nanoid";
 
 interface Cart {

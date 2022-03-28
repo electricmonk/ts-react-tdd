@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
-import {Order, Product} from "./types";
+import {Product} from "./types";
 import * as bodyParser from "body-parser";
 import morgan from "morgan";
 import {MongoClient} from "mongodb";
 import {MongoDBProductRepository} from "./product.repo";
+import {MongoDBOrderRepository} from "./order.repo";
 
 interface Cart {
   id: string;
@@ -13,24 +14,7 @@ interface Cart {
 
 const app = express();
 
-type MongoOrder = Omit<Order, "id">;
-class OrderRepository {
-  private orders: Order[] = [];
-  async create(order: MongoOrder): Promise<Order> {
-    const newOrder = {
-      id: new Date().getTime().toString(),
-      ...order
-    };
-    this.orders.push(newOrder)
-    return newOrder
-  }
-
-  async findById(orderId: string): Promise<Order | undefined> {
-    return this.orders.find(({id}) => orderId === id);
-  }
-}
-
-function createRoutes(productRepo: MongoDBProductRepository, orderRepo: OrderRepository ) {
+function createRoutes(productRepo: MongoDBProductRepository, orderRepo: MongoDBOrderRepository ) {
   const sessions: Record<string, Cart> = {};
 
   const router = express.Router();
@@ -89,7 +73,7 @@ async function startServer() {
 
   const db = mongo.db('store');
   const productRepo = new MongoDBProductRepository(db);
-  const orderRepo = new OrderRepository();
+  const orderRepo = new MongoDBOrderRepository(db);
 
   app.use(bodyParser.json());
   app.use(cors());

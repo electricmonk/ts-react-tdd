@@ -14,5 +14,6 @@
     "resolveJsonModule": true,
     "noUnusedLocals": true,
     "isolatedModules": true
-  }
+  },
+  "include": ["src", "test"]
 }

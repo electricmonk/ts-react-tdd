@@ -2,7 +2,7 @@ import {fireEvent, render, within} from "@testing-library/react";
 import {App} from "../../src/components/App";
 import {MemoryRouter} from "react-router-dom";
 import {InMemoryShopBackend} from "../../src/adapters/inMemoryShopBackend";
-import {aProduct} from "@ts-react-tdd/server/types";
+import {aProduct} from "@ts-react-tdd/server/src/types";
 
 
 

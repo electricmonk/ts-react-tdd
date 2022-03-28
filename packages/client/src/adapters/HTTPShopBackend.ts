@@ -1,7 +1,7 @@
 import axios from "axios";
 import {CartAdapter} from "./cart";
 import {ProductCatalog} from "./productCatalog";
-import {Order, Product} from "@ts-react-tdd/server/types";
+import {Order, Product} from "@ts-react-tdd/server/src/types";
 import {OrderAdapter} from "./order";
 
 export class HTTPShopBackend implements CartAdapter, OrderAdapter, ProductCatalog {

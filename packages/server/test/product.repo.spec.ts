@@ -1,6 +1,6 @@
-import {MongoDBProductRepository} from "../product.repo";
+import {MongoDBProductRepository} from "../src/product.repo";
 import {MongoClient, ObjectId} from "mongodb";
-import {aProduct} from "../types";
+import {aProduct} from "../src/types";
 
 describe('the mongodb product repository', () => {
     it('finds an array of products by ids', async() => {

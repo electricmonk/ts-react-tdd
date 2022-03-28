@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {CartAdapter} from "../adapters/cart";
 import { ProductCatalog} from "../adapters/productCatalog";
 import {useNavigate} from "react-router-dom";
-import {Product} from "@ts-react-tdd/server/types";
+import {Product} from "@ts-react-tdd/server/src/types";
 
 interface ShopProps {
     cartAdapter: CartAdapter;

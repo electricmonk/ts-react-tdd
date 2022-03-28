@@ -1,6 +1,6 @@
 import Puppeteer, {Browser} from "puppeteer";
 import axios from "axios";
-import {aProduct} from "@ts-react-tdd/server/types";
+import {aProduct} from "@ts-react-tdd/server/src/types";
 
 //TODO hot module reload for quick feedback cycle
 //TODO proper stack traces for unhandled promise rejections

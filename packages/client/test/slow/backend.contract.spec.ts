@@ -5,7 +5,7 @@ import {ProductCatalog} from "../../src/adapters/productCatalog";
 import {OrderAdapter} from "../../src/adapters/order";
 import {HTTPShopBackend} from "../../src/adapters/HTTPShopBackend";
 import axios from "axios";
-import {aProduct, Product} from "@ts-react-tdd/server/types";
+import {aProduct, Product} from "@ts-react-tdd/server/src/types";
 
 interface Harness {
   backend: OrderAdapter & ProductCatalog & CartAdapter,
