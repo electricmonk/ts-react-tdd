@@ -13,9 +13,25 @@ interface Cart {
 
 const app = express();
 
-function createRoutes(productRepo: MongoDBProductRepository) {
+type MongoOrder = Omit<Order, "id">;
+class OrderRepository {
+  private orders: Order[] = [];
+  async create(order: MongoOrder): Promise<Order> {
+    const newOrder = {
+      id: new Date().getTime().toString(),
+      ...order
+    };
+    this.orders.push(newOrder)
+    return newOrder
+  }
+
+  async findById(orderId: string): Promise<Order | undefined> {
+    return this.orders.find(({id}) => orderId === id);
+  }
+}
+
+function createRoutes(productRepo: MongoDBProductRepository, orderRepo: OrderRepository ) {
   const sessions: Record<string, Cart> = {};
-  const orders: Order[] = [];
 
   const router = express.Router();
 
@@ -39,18 +55,15 @@ function createRoutes(productRepo: MongoDBProductRepository) {
       throw new Error(`no cart with id ${cartId} was found`);
     } else {
       const products = await productRepo.findByIds(cart.productIds);
-      const order = {
-        id: cartId,
-        products
-      };
-      orders.push(order)
+
+      const order = await orderRepo.create({products});
       res.status(201).send(order.id);
     }
   });
 
-  router.get("/order/:orderId", (req, res) => {
+  router.get("/order/:orderId", async (req, res) => {
     const {orderId} = req.params;
-    const order = orders.find(({id}) => orderId === id);
+    const order = await orderRepo.findById(orderId);
     if (order) {
       res.json(order);
     } else {
@@ -76,10 +89,11 @@ async function startServer() {
 
   const db = mongo.db('store');
   const productRepo = new MongoDBProductRepository(db);
+  const orderRepo = new OrderRepository();
 
   app.use(bodyParser.json());
   app.use(cors());
-  app.use(createRoutes(productRepo));
+  app.use(createRoutes(productRepo, orderRepo));
   app.use(morgan('tiny'))
   app.listen(8080, () => {
     console.log("listening to 8080");
