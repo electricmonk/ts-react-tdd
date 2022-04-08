@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {OrderAdapter} from "../adapters/order";
 import {useParams} from "react-router-dom";
-import {Order} from "@ts-react-tdd/server/types";
+import {Order} from "@ts-react-tdd/server/src/types";
 
 
 interface OrderSummaryProps {

@@ -1,4 +1,4 @@
-import {Product} from "@ts-react-tdd/server/types";
+import {Product} from "@ts-react-tdd/server/src/types";
 
 export interface CartAdapter {
     getCount: (cartId: string) => Promise<number>;

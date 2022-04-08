@@ -1,7 +1,8 @@
 import { OrderAdapter} from "./order";
 import { ProductCatalog} from "./productCatalog";
 import {CartAdapter} from "./cart";
-import {Order, Product } from "@ts-react-tdd/server/types";
+import {Order, Product } from "@ts-react-tdd/server/src/types";
+import {nanoid} from "nanoid";
 
 interface Cart {
     id: string;
@@ -11,9 +12,10 @@ interface Cart {
 export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCatalog {
     #sessions: Record<string, Cart> = {};
     private orders: Order[] = [];
+    private products: Product[] = [];
 
-    constructor(private products: Product[]) {
-
+    constructor(products: Omit<Product,"id">[]) {
+        products.forEach(p => this.createProduct(p));
     }
 
     async findAllProducts(): Promise<Product[]> {
@@ -42,8 +44,10 @@ export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCa
         return this.orders.find(({id}) => id === orderId) || null;
     }
 
-    async createProduct(product: Product) {
+    async createProduct(productFields: Omit<Product, "id">) {
+        const product = {...productFields, id: nanoid()};
         this.products.push(product);
+        return product;
     }
 
 }
