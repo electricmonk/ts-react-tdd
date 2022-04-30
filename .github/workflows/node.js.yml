@@ -29,5 +29,6 @@ jobs:
     - run: yarn install
     - run: cd packages/client/test/slow && docker compose up -d
     - run: yarn dlx wait-on tcp:27017 && yarn dev &
-    - run: yarn dlx wait-on tcp:3000 && yarn dlx wait-on tcp:8080
+    - run: yarn dlx wait-on tcp:3000
+    - run: yarn dlx wait-on tcp:8080
     - run: yarn test
