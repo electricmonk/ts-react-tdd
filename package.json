@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "yarn workspaces foreach -piv -j unlimited run dev",
     "serve:ci": "yarn workspaces foreach -piv -j unlimited run serve:ci",
-    "test": "yarn workspaces foreach -piv run -j unlimited test"
+    "test": "yarn workspaces foreach -piv -j unlimited run test"
   },
   "workspaces": [
     "packages/*"
