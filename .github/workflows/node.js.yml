@@ -28,7 +28,6 @@ jobs:
         cache: 'yarn'
     - run: yarn dlx add wait-on
     - run: yarn install
-    - run: yarn bootstrap
     - run: cd packages/client/test/slow && docker compose up -d
     - run: yarn exec wait-on tcp:27017 && yarn invoke dev &
     - run: yarn exec wait-on tcp:3000 && yarn exec wait-on tcp:8080
