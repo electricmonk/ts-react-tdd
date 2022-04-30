@@ -27,11 +27,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
     - run: yarn install
+    - run: yarn workspaces list
     - run: docker compose -f packages/client/test/slow/docker-compose.yml up -d
-    - run: echo ${GITHUB_WORKSPACE}
     - run: yarn dlx wait-on tcp:27017 && yarn dev 
-    - run: echo ${GITHUB_WORKSPACE}
     - run: yarn dlx wait-on tcp:3000
-    - run: echo ${GITHUB_WORKSPACE}
     - run: yarn dlx wait-on tcp:8080
     - run: yarn test
