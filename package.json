@@ -1,14 +1,13 @@
 {
   "name": "root",
   "private": true,
-  "dependencies": {
-    "lerna": "^4.0.0"
-  },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "invoke": "FORCE_COLOR=1 lerna run --parallel",
-    "dev": "yarn invoke dev",
-    "serve:ci": "yarn invoke serve:ci",
-    "test": "yarn invoke test"
-  }
+    "dev": "yarn workspaces foreach -piv -j unlimited run dev",
+    "serve:ci": "yarn workspaces foreach -piv -j unlimited run serve:ci",
+    "test": "yarn workspaces foreach -piv -j unlimited run test"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "packageManager": "yarn@3.2.0"
 }

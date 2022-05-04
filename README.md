@@ -10,15 +10,9 @@ Yarn comes with several built-in features such as interactive upgrades, the abil
 
 We're using yarn workspaces in order to manage dependencies across different packages and hoist all the dependencies to the root level of the project.
 
+We also use yarns [foreach](https://yarnpkg.com/cli/workspaces/foreach) plugin to have a streamlined script execution across all packages.
+
 Both Yarn and NPM have proven a similar level of maturity, however a slightly more convenient ergonomics and overall developer experienced have made us choose Yarn as our current package and workspace manager.
-
-#### Lerna
-
-Lerna is a thin layer on top of Yarn Workspaces which allows us to easily streamline and unify versions between packages, while also executing packages simultaneously.
-
-The packages that are executed together, emit their output into the same buffer with their respective names.
-
-We chose Lerna as it is a minimal solution that elevates Yarn workspaces - our choice for the workspace manager of this project.
 
 #### TypeScript
 

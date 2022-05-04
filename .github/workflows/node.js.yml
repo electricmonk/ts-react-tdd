@@ -26,10 +26,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
-    - run: yarn global add wait-on
     - run: yarn install
-    - run: yarn bootstrap
-    - run: cd packages/client/test/slow && docker compose up -d
-    - run: yarn exec wait-on tcp:27017 && yarn invoke dev &
-    - run: yarn exec wait-on tcp:3000 && yarn exec wait-on tcp:8080
-    - run: yarn invoke test
+    - run: yarn workspaces list
+    - run: docker compose -f packages/client/test/slow/docker-compose.yml up -d
+    - run: yarn dlx wait-on tcp:27017 
+    - run: yarn dev &
+    - run: yarn dlx wait-on tcp:3000
+    - run: yarn dlx wait-on tcp:8080
+    - run: yarn test
