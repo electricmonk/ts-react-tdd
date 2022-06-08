@@ -11,29 +11,29 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@jest/globals": "^27.5.1",
-    "@testing-library/react": "^12.1.3",
-    "@types/jest": "^27.4.0",
-    "@types/js-cookie": "^3.0.1",
-    "@types/react": "^17.0.39",
-    "@types/react-dom": "^17.0.11",
+    "@jest/globals": "^28.1.1",
+    "@testing-library/react": "^12.1.5",
+    "@types/jest": "^27.5.2",
+    "@types/js-cookie": "^3.0.2",
+    "@types/react": "^17.0.45",
+    "@types/react-dom": "^17.0.17",
     "html-webpack-plugin": "^5.5.0",
-    "jest": "^27.4.7",
-    "puppeteer": "^13.1.2",
-    "ts-jest": "^27.1.3",
-    "ts-loader": "^9.2.6",
-    "typescript": "^4.5.5",
-    "webpack": "^5.69.1",
+    "jest": "^27.5.1",
+    "puppeteer": "^13.7.0",
+    "ts-jest": "^27.1.5",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.7.3",
+    "webpack": "^5.73.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.7.4"
+    "webpack-dev-server": "^4.9.2"
   },
   "dependencies": {
     "@ts-react-tdd/server": "1.0.0",
-    "axios": "^0.26.0",
+    "axios": "^0.27.2",
     "js-cookie": "^3.0.1",
-    "nanoid": "^3.3.1",
+    "nanoid": "^3.3.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-router-dom": "^6.2.2"
+    "react-router-dom": "^6.3.0"
   }
 }
