@@ -4,4 +4,9 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
+  transform: {
+    "node_modules/nanoid/.+\\.(j|t)sx?$": "ts-jest",
+  },
+  transformIgnorePatterns: ["node_modules/(?!nanoid/.*)"],
+  setupFilesAfterEnv: ["./setupTests.js"],
 };
