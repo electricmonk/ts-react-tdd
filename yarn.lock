@@ -824,7 +824,6 @@ __metadata:
     "@types/js-cookie": ^3.0.1
     "@types/react": ^17.0.39
     "@types/react-dom": ^17.0.11
-    "@types/react-query": ^1.2.9
     axios: ^0.26.0
     html-webpack-plugin: ^5.5.0
     jest: ^27.4.7
@@ -1185,15 +1184,6 @@ __metadata:
   dependencies:
     "@types/react": ^17
   checksum: 2f41a45ef955c8f68a7bcd22343715f15e1560a5e5ba941568b3c970d9151f78fe0975ecf4df7f691339af546555e0f23fa423a0a5bcd7ea4dd4f9c245509936
-  languageName: node
-  linkType: hard
-
-"@types/react-query@npm:^1.2.9":
-  version: 1.2.9
-  resolution: "@types/react-query@npm:1.2.9"
-  dependencies:
-    react-query: "*"
-  checksum: 9bddd0e810f3453276c8145450b294674c14f69daba75da9fdc953f0a6329ab533b64db6fe212267dc79ba61485f6eb673a9c2ad119c072b2ecae59c2bb593e4
   languageName: node
   linkType: hard
 
@@ -6113,7 +6103,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query@npm:*, react-query@npm:^3.39.1":
+"react-query@npm:^3.39.1":
   version: 3.39.1
   resolution: "react-query@npm:3.39.1"
   dependencies:
