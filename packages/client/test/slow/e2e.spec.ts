@@ -22,25 +22,31 @@ test(
         const context = await browser.createIncognitoBrowserContext()
 
         const page = await context.newPage();
-        await page.goto("http://localhost:3000");
+        try {
+            await page.goto("http://localhost:3000");
 
-        const addToCart = await page.waitForSelector("aria/Add to cart");
-        expect(addToCart).not.toBeNull();
-        await addToCart!.click();
+            const addToCart = await page.waitForSelector("aria/Add to cart");
+            expect(addToCart).not.toBeNull();
+            await addToCart!.click();
+    
+            expect(await page.waitForSelector("aria/1 items in cart")).not.toBeNull();
+    
+            const viewCart = await page.$("aria/View cart");
+            expect(viewCart).not.toBeNull();
+            await viewCart!.click();
+    
+            const checkout = await page.waitForSelector("aria/Checkout");
+            expect(checkout).not.toBeNull();
+            await checkout!.click();
+    
+            expect(await page.waitForSelector("aria/Thank You")).not.toBeNull();
+    
+            //TODO assert confirmation email
+        } catch (e) {
+            await page.screenshot({path: "./reports/e2e-failed.png"});
+            throw e;
+        }
 
-        expect(await page.waitForSelector("aria/1 items in cart")).not.toBeNull();
-
-        const viewCart = await page.$("aria/View cart");
-        expect(viewCart).not.toBeNull();
-        await viewCart!.click();
-
-        const checkout = await page.waitForSelector("aria/Checkout");
-        expect(checkout).not.toBeNull();
-        await checkout!.click();
-
-        expect(await page.waitForSelector("aria/Thank You")).not.toBeNull();
-
-        //TODO assert confirmation email
     },
     60 * 1000
 );
