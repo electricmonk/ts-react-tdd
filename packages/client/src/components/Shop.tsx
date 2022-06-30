@@ -4,15 +4,17 @@ import { ProductCatalog} from "../adapters/productCatalog";
 import {useNavigate} from "react-router-dom";
 import {Product} from "@ts-react-tdd/server/src/types";
 import { useMutation, useQuery } from "react-query";
+import { useRecoilValue } from "recoil";
+import { CartId } from "../state";
 
 interface ShopProps {
     cartAdapter: CartAdapter;
     productCatalog: ProductCatalog
-    cartId: string;
 }
 
-export const Shop: React.FC<ShopProps> = ({cartAdapter, cartId, productCatalog}) => {
+export const Shop: React.FC<ShopProps> = ({cartAdapter, productCatalog}) => {
     const navigate = useNavigate();
+    const cartId = useRecoilValue(CartId);
 
     const itemCount = useQuery("itemCount", () => cartAdapter.getCount(cartId));
     const products = useQuery("products", () => productCatalog.findAllProducts());

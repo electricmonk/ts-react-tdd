@@ -4,15 +4,56 @@ import {MemoryRouter} from "react-router-dom";
 import {InMemoryShopBackend} from "../../src/adapters/inMemoryShopBackend";
 import {aProduct} from "@ts-react-tdd/server/src/types";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { RecoilRoot } from "recoil";
 
+const Root = ({backend} : {backend: InMemoryShopBackend}) => <QueryClientProvider client={new QueryClient()}>
+    <RecoilRoot>
+        <MemoryRouter>
+            <App cartAdapter={backend} catalog={backend} orderAdapter={backend}/>
+        </MemoryRouter>
+    </RecoilRoot>
+</QueryClientProvider>;
+
+class LocalStorageMock {
+    constructor(private store: any = {}) {
+      this.store = {};
+    }
+  
+    clear() {
+      this.store = {};
+    }
+  
+    getItem(key: string) {
+      return this.store[key] || null;
+    }
+  
+    setItem(key: string, value: string) {
+      this.store[key] = String(value);
+    }
+  
+    removeItem(key: string) {
+      delete this.store[key];
+    }
+
+    get length() {
+        return this.store.length;
+    }
+
+    key(index: number) {
+        return Object.keys(this.store)[index];
+    }
+  }
+  
+
+beforeEach(() => global.localStorage = new LocalStorageMock())
 
 
 test("a user can purchase a product, see the confirmation page and get a confirmation email", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
-    const cartAdapter = new InMemoryShopBackend([moogOne]);
+    const backend = new InMemoryShopBackend([moogOne]);
 
-    const app = render(<QueryClientProvider client={new QueryClient()}><MemoryRouter><App cartAdapter={cartAdapter} catalog={cartAdapter} orderAdapter={cartAdapter}/></MemoryRouter></QueryClientProvider>);
+    const app = render(<Root backend={backend}/>);
     await app.findByText("0 items in cart");
 
     const product = await app.findByLabelText(moogOne.title)
@@ -29,5 +70,23 @@ test("a user can purchase a product, see the confirmation page and get a confirm
 
     expect(await app.findByText("Thank You")).toBeTruthy();
     expect(await app.findByText(moogOne.title)).toBeTruthy();
+
+})
+
+test("cart persists across rerenders", async () => {
+    const moogOne = aProduct({title: "Moog One"});
+    const backend = new InMemoryShopBackend([moogOne]);
+
+    const app = render(<Root backend={backend}/>);
+    await app.findByText("0 items in cart");
+
+    const product = await app.findByLabelText(moogOne.title)
+    const add = within(product).getByText("Add");
+    fireEvent.click(add);
+
+    await app.findByText("1 items in cart");
+    app.rerender(<Root backend={backend} />);
+
+    await app.findByText("1 items in cart");
 
 })

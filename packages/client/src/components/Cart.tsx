@@ -1,15 +1,16 @@
 import {CartAdapter} from "../adapters/cart";
 import React from "react";
 import {useNavigate} from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { CartId } from "../state";
 
 interface CartProps {
     cartAdapter: CartAdapter;
-    cartId: string;
-
 }
 
-export const Cart: React.FC<CartProps> = ({cartId, cartAdapter}) => {
+export const Cart: React.FC<CartProps> = ({cartAdapter}) => {
     const navigate = useNavigate();
+    const cartId = useRecoilValue(CartId);
 
     const checkout = async () => {
          const orderId = await cartAdapter.checkout(cartId)
