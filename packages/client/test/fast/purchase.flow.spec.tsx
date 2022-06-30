@@ -72,21 +72,3 @@ test("a user can purchase a product, see the confirmation page and get a confirm
     expect(await app.findByText(moogOne.title)).toBeTruthy();
 
 })
-
-test("cart persists across rerenders", async () => {
-    const moogOne = aProduct({title: "Moog One"});
-    const backend = new InMemoryShopBackend([moogOne]);
-
-    const app = render(<Root backend={backend}/>);
-    await app.findByText("0 items in cart");
-
-    const product = await app.findByLabelText(moogOne.title)
-    const add = within(product).getByText("Add");
-    fireEvent.click(add);
-
-    await app.findByText("1 items in cart");
-    app.rerender(<Root backend={backend} />);
-
-    await app.findByText("1 items in cart");
-
-})
