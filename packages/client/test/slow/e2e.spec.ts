@@ -4,8 +4,6 @@ import {aProduct} from "@ts-react-tdd/server/src/types";
 
 const ReportsDir = process.env.REPORTS_DIR || "./reports"
 
-console.log('env', process.env);
-
 //TODO hot module reload for quick feedback cycle
 //TODO proper stack traces for unhandled promise rejections
 
@@ -44,7 +42,6 @@ test(
             await checkout!.click();
     
             expect(await page.waitForSelector("aria/Thank You")).not.toBeNull();
-            expect(await page.waitForSelector("aria/fuck You")).not.toBeNull();
     
             //TODO assert confirmation email
         } catch (e) {
