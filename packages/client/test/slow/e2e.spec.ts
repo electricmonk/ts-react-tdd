@@ -48,7 +48,9 @@ test(
     
             //TODO assert confirmation email
         } catch (e) {
-            await page.screenshot({path: `${ReportsDir}/e2e-failed.png`});
+            const path = `${ReportsDir}/e2e-failed.png`;
+            await page.screenshot({path});
+            console.log('saved screenshot to', path);
             throw e;
         }
 
