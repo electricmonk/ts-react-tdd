@@ -48,7 +48,7 @@ test(
     
             //TODO assert confirmation email
         } catch (e) {
-            await page.screenshot({path: "./reports/e2e-failed.png"});
+            await page.screenshot({path: `${ReportsDir}/e2e-failed.png`});
             throw e;
         }
 
