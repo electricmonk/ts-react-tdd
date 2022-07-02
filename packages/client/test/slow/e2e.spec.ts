@@ -44,6 +44,7 @@ test(
             await checkout!.click();
     
             expect(await page.waitForSelector("aria/Thank You")).not.toBeNull();
+            expect(await page.waitForSelector("aria/fuck You")).not.toBeNull();
     
             //TODO assert confirmation email
         } catch (e) {
