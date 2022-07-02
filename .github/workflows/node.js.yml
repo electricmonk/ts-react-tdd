@@ -34,7 +34,7 @@ jobs:
     - run: yarn dlx wait-on tcp:3000
     - run: yarn dlx wait-on tcp:8080
     - run: mkdir ${{ runner.temp }}/reports
-    - run: REPORTS_DIR=${{ runner.temp }} yarn test
+    - run: export REPORTS_DIR=${{ runner.temp }} && yarn test
     - name: Upload screenshot on failure
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3

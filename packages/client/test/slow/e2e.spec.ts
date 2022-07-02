@@ -4,6 +4,8 @@ import {aProduct} from "@ts-react-tdd/server/src/types";
 
 const ReportsDir = process.env.REPORTS_DIR || "./reports"
 
+console.log('env', process.env);
+
 //TODO hot module reload for quick feedback cycle
 //TODO proper stack traces for unhandled promise rejections
 
