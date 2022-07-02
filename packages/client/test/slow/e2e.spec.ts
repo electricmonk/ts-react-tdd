@@ -2,12 +2,14 @@ import Puppeteer, {Browser} from "puppeteer";
 import axios from "axios";
 import {aProduct} from "@ts-react-tdd/server/src/types";
 
+const ReportsDir = process.env.REPORTS_DIR || "./reports"
+
 //TODO hot module reload for quick feedback cycle
 //TODO proper stack traces for unhandled promise rejections
 
 let browser: Browser;
 beforeAll(async () => {
-    browser = await Puppeteer.launch({slowMo: 5});
+    browser = await Puppeteer.launch({slowMo: 4});
 }, 60 * 1000);
 
 
@@ -73,7 +75,7 @@ test(
     
             //TODO assert confirmation email
         } catch (e) {
-            await page.screenshot({path: "./reports/e2e-failed.png"});
+            await page.screenshot({path: `${ReportsDir}/e2e-failed.png`});
             throw e;
         }
 

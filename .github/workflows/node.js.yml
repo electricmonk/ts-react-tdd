@@ -26,7 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
-    - run: mkdir ./packages/client/reports
     - run: yarn install
     - run: yarn workspaces list
     - run: docker compose -f packages/client/test/slow/docker-compose.yml up -d
@@ -34,9 +33,11 @@ jobs:
     - run: yarn dev &
     - run: yarn dlx wait-on tcp:3000
     - run: yarn dlx wait-on tcp:8080
-    - run: yarn test
-    - uses: actions/upload-artifact@v3
+    - run: mkdir ${{ runner.temp }}/reports
+    - run: REPORTS_DIR=${{ runner.temp }} yarn test
+    - name: Upload screenshot on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
       with:
         name: Test Reports
-        if: always()
-        path: ./packages/client/reports
+        path: ${{ runner.temp }}/reports
