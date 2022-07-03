@@ -11,7 +11,7 @@ const app = express();
 
 async function startServer() {
   const mongo = await new MongoClient(
-    `mongodb://127.0.0.1?retryWrites=true&writeConcern=majority`
+    `mongodb://root:password@127.0.0.1?retryWrites=true&writeConcern=majority`
   ).connect();
 
   const db = mongo.db("store");
