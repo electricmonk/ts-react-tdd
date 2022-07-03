@@ -11,8 +11,8 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
   transform: {
-    "node_modules/nanoid/.+\\.(j|t)sx?$": "ts-jest",
+    "node_modules/(nanoid|@faker-js)/.+\\.(j|t)sx?$": "ts-jest",
   },
-  transformIgnorePatterns: ["node_modules/(?!nanoid/.*)"],
+  transformIgnorePatterns: ["node_modules/(?!(nanoid|@faker-js)/.*)"],
   setupFilesAfterEnv: ["./setupTests.js"],
 };
