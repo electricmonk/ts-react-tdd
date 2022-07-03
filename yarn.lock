@@ -871,7 +871,6 @@ __metadata:
     html-webpack-plugin: ^5.5.0
     jest: ^28.1.1
     jest-environment-jsdom: ^28.1.1
-    js-cookie: ^3.0.1
     nanoid: ^4.0.0
     puppeteer: ^14.3.0
     react: ^18.1.0
@@ -4786,13 +4785,6 @@ __metadata:
   bin:
     jest: bin/jest.js
   checksum: 398a143d9ef1a78e2ba516a09b6343cb926bf20e29ad400141dd3bd57e964195b82817a60eb8745ba9006fcd7c028ceda5108e3c426fa4e29877f28d87cf88a3
-  languageName: node
-  linkType: hard
-
-"js-cookie@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "js-cookie@npm:3.0.1"
-  checksum: bb48de67e2a6bd1ae3dfd6b2d5a167c33dd0c5a37e909206161eb0358c98f17cb55acd55827a58e9eea3630d89444e7479f7938ef4420dda443218b8c434a4c3
   languageName: node
   linkType: hard
 
