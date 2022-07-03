@@ -18,7 +18,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({orderAdapter}) => {
     }
 
     if (error) {
-        return <section>Error: {error}</section>
+        return <section><>Error: {error}</></section>
     }
 
     return <section>

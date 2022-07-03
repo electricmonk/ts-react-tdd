@@ -43,7 +43,7 @@ const Products: React.FC<{products: Product[] | undefined, isLoading: boolean, e
     }
 
     if (error) {
-        return <section>Error: {error}</section>
+        return <section><>Error: {error}</></section>
     }
 
     return <>{products!.map(({title, id}) => 
