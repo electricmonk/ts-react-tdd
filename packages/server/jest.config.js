@@ -2,6 +2,6 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
-   preset: "ts-jest",
-   testEnvironment: "node",
+  preset: "ts-jest",
+  testEnvironment: "node",
 };
