@@ -33,4 +33,4 @@ jobs:
     - run: yarn dev &
     - run: yarn dlx wait-on tcp:3000
     - run: yarn dlx wait-on tcp:8080
-    - run: yarn test
+    - run: yarn test:ci | bash ./predate.sh
