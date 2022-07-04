@@ -3,7 +3,6 @@ import {App} from "../../src/components/App";
 import {MemoryRouter} from "react-router-dom";
 import {InMemoryShopBackend} from "../../src/adapters/inMemoryShopBackend";
 import {aProduct} from "@ts-react-tdd/server/src/types";
-import { QueryClient, QueryClientProvider } from "react-query";
 
 
 
@@ -12,8 +11,8 @@ test("a user can purchase a product, see the confirmation page and get a confirm
     const moogOne = aProduct({title: "Moog One"});
     const cartAdapter = new InMemoryShopBackend([moogOne]);
 
-    const app = render(<QueryClientProvider client={new QueryClient()}><MemoryRouter><App cartAdapter={cartAdapter} catalog={cartAdapter} orderAdapter={cartAdapter}/></MemoryRouter></QueryClientProvider>);
-    await app.findByText("0 items in cart");
+    const app = render(<MemoryRouter><App cartAdapter={cartAdapter} catalog={cartAdapter} orderAdapter={cartAdapter}/></MemoryRouter>);
+    app.getByText("0 items in cart");
 
     const product = await app.findByLabelText(moogOne.title)
     const add = within(product).getByText("Add");
