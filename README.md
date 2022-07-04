@@ -24,9 +24,6 @@ We chose typescript over other solutions (such as ELM, ReasonML or ClojureScript
 
 #### React
 
-##### React Query
-We use [React Query](https://react-query.tanstack.com/) to manage complex state around asynchronous data fetching (loading, error, got data, refresh, etc).
-
 #### Jest
 Although not without issues, Jest has proven to be a mature and effective testing library. It offers a more cohesive framework than the alternative (Mocha/Chai),
 it integrates very nicely with [React Testing Library](https://github.com/testing-library/react-testing-library) and its plugin API is less messy in our opinion.
