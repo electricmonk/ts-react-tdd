@@ -2,7 +2,7 @@ const NAMESPACE = "__REACT_TDD_POC";
 const STRINGIFIED_OBJECT = "{}";
 
 interface StorageData {
-  cartId?: string;
+  cartId: string | null;
 }
 
 type ValueOf<T> = T[keyof T];

@@ -7,16 +7,23 @@ const generateCartId = () => new Date().getTime().toString();
 export const useCartId = () => {
   const [cartId, setCartId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const savedValue = persistantStorage.getItem(KEY);
-    if (savedValue !== null) {
-      setCartId(savedValue);
-    } else {
-      const id = generateCartId();
-      persistantStorage.setItem(KEY, id);
-      setCartId(id);
-    }
-  }, []);
+  const resetCartId = () => {
+    persistantStorage.setItem(KEY, null);
+    setCartId(null);
+  };
 
-  return cartId;
+  useEffect(() => {
+    if (cartId === null) {
+      const savedValue = persistantStorage.getItem(KEY);
+      if (savedValue !== null) {
+        setCartId(savedValue);
+      } else {
+        const id = generateCartId();
+        persistantStorage.setItem(KEY, id);
+        setCartId(id);
+      }
+    }
+  }, [cartId]);
+
+  return { cartId, resetCartId };
 };

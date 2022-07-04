@@ -19,7 +19,7 @@ export const App: React.FC<AppProps> = ({
   catalog,
   orderAdapter,
 }) => {
-  const cartId = useCartId();
+  const { cartId, resetCartId } = useCartId();
   return (
     <Routes>
       <Route
@@ -34,7 +34,13 @@ export const App: React.FC<AppProps> = ({
       />
       <Route
         path="/cart"
-        element={<Cart cartAdapter={cartAdapter} cartId={cartId!} />}
+        element={
+          <Cart
+            cartAdapter={cartAdapter}
+            cartId={cartId!}
+            onCheckout={resetCartId}
+          />
+        }
       />
       <Route
         path="/order-summary/:orderId"
