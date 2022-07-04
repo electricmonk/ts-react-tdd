@@ -77,7 +77,7 @@ test(
             
             await page.reload();
 
-            expect(await page.waitForSelector("aria/2 items in cart")).not.toBeNull();
+            expect(await page.waitForSelector("aria/1 items in cart")).not.toBeNull();
         } catch (e) {
             await screenshotOnFailure(page);
             throw e;
