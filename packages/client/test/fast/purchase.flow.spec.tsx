@@ -6,13 +6,13 @@ import {aProduct} from "@ts-react-tdd/server/src/types";
 
 
 
-test("a user can purchase a product, see the confirmation page and get a confirmation email", async () => {
+test("a user can purchase a product, see the confirmation page and get a confirmation email, after which the cart is reset", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
     const cartAdapter = new InMemoryShopBackend([moogOne]);
 
     const app = render(<MemoryRouter><App cartAdapter={cartAdapter} catalog={cartAdapter} orderAdapter={cartAdapter}/></MemoryRouter>);
-    app.getByText("0 items in cart");
+    await app.findByText("0 items in cart");
 
     const product = await app.findByLabelText(moogOne.title)
     const add = within(product).getByText("Add");
@@ -29,4 +29,7 @@ test("a user can purchase a product, see the confirmation page and get a confirm
     expect(await app.findByText("Thank You")).toBeTruthy();
     expect(await app.findByText(moogOne.title)).toBeTruthy();
 
+    fireEvent.click(app.getByText("Home"));
+
+    await app.findByText("0 items in cart");
 })
