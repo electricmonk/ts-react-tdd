@@ -1,27 +1,26 @@
-import React, {useEffect, useState} from "react";
-import {CartAdapter} from "../adapters/cart";
-import { ProductCatalog} from "../adapters/productCatalog";
+import React, {useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Product} from "@ts-react-tdd/server/src/types";
+import { IOContext } from "../adapters/context";
 
 interface ShopProps {
-    cartAdapter: CartAdapter;
-    productCatalog: ProductCatalog
     cartId: string;
 }
 
-export const Shop: React.FC<ShopProps> = ({cartAdapter, cartId, productCatalog}) => {
+export const Shop: React.FC<ShopProps> = ({cartId}) => {
+    const { cart, productCatalog } = useContext(IOContext);
+    
     const [itemCount, setItemCount] = useState<number>(0);
     const [products, setProducts] = useState<Product[]>([])
     const addItem = async (productId: Product["id"]) => {
-        await cartAdapter.addItem(cartId, productId);
-        setItemCount(await cartAdapter.getCount(cartId));
+        await cart.addItem(cartId, productId);
+        setItemCount(await cart.getCount(cartId));
     };
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        cartAdapter.getCount(cartId).then(setItemCount);
+        cart.getCount(cartId).then(setItemCount);
         productCatalog.findAllProducts().then(setProducts)
     }, []);
 

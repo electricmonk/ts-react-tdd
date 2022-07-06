@@ -23,3 +23,12 @@ export class HTTPShopBackend implements CartAdapter, OrderAdapter, ProductCatalo
         (await axios.get<Product[]>(`${this.url}/products`)).data;
 
 }
+
+export function httpBackend(url: string) {
+    const backend = new HTTPShopBackend(url);
+    return {
+      cart: backend,
+      productCatalog: backend,
+      orders: backend,
+    }
+  }

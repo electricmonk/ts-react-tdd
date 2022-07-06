@@ -1,17 +1,18 @@
-import {fireEvent, render, within} from "@testing-library/react";
-import {App} from "../../src/components/App";
-import {MemoryRouter} from "react-router-dom";
-import {InMemoryShopBackend} from "../../src/adapters/inMemoryShopBackend";
-import {aProduct} from "@ts-react-tdd/server/src/types";
-
+import { fireEvent, render, within } from "@testing-library/react";
+import { aProduct } from "@ts-react-tdd/server/src/types";
+import { MemoryRouter } from "react-router-dom";
+import { IOContext } from "../../src/adapters/context";
+import { inMemoryBackend } from "../../src/adapters/inMemoryShopBackend";
+import { App } from "../../src/components/App";
+ 
 
 
 test("a user can purchase a product, see the confirmation page and get a confirmation email", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
-    const cartAdapter = new InMemoryShopBackend([moogOne]);
+    const backend = inMemoryBackend([moogOne]);
 
-    const app = render(<MemoryRouter><App cartAdapter={cartAdapter} catalog={cartAdapter} orderAdapter={cartAdapter}/></MemoryRouter>);
+    const app = render(<MemoryRouter><IOContext.Provider value={backend}><App/></IOContext.Provider></MemoryRouter>);
     app.getByText("0 items in cart");
 
     const product = await app.findByLabelText(moogOne.title)

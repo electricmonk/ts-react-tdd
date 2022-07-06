@@ -9,12 +9,13 @@ interface Cart {
     products: Product["id"][]
 }
 
+type ProductTemplate = Omit<Product,"id">
 export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCatalog {
     #sessions: Record<string, Cart> = {};
     private orders: Order[] = [];
     private products: Product[] = [];
 
-    constructor(products: Omit<Product,"id">[]) {
+    constructor(products: ProductTemplate[]) {
         products.forEach(p => this.createProduct(p));
     }
 
@@ -51,3 +52,12 @@ export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCa
     }
 
 }
+
+export function inMemoryBackend(products: ProductTemplate[] = []) {
+    const backend = new InMemoryShopBackend(products);
+    return {
+      cart: backend,
+      productCatalog: backend,
+      orders: backend,
+    }
+  }

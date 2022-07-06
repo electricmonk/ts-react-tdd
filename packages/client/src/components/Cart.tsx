@@ -1,18 +1,18 @@
-import {CartAdapter} from "../adapters/cart";
-import React from "react";
+import React, { useContext } from "react";
 import {useNavigate} from "react-router-dom";
+import { IOContext } from "../adapters/context";
 
 interface CartProps {
-    cartAdapter: CartAdapter;
-    cartId: string;
+    id: string;
 
 }
 
-export const Cart: React.FC<CartProps> = ({cartId, cartAdapter}) => {
+export const Cart: React.FC<CartProps> = ({id}) => {
     const navigate = useNavigate();
+    const { cart } = useContext(IOContext);
 
     const checkout = async () => {
-         const orderId = await cartAdapter.checkout(cartId)
+         const orderId = await cart.checkout(id)
         navigate("/order-summary/" + orderId)
     }
 
