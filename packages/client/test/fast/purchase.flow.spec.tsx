@@ -24,7 +24,8 @@ test("a user can purchase a product, see the confirmation page and get a confirm
     const viewCart = await app.findByText("View cart");
     fireEvent.click(viewCart);
 
-    const checkout = await app.findByText("Checkout");
+    expect(await app.findByText(moogOne.title)).toBeTruthy();
+    const checkout = await app.getByText("Checkout");
     fireEvent.click(checkout);
 
     expect(await app.findByText("Thank You")).toBeTruthy();

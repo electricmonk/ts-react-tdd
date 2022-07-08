@@ -1,8 +1,8 @@
-import Puppeteer, {Browser} from "puppeteer";
+import { aProduct } from "@ts-react-tdd/server/src/types";
 import axios from "axios";
-import {aProduct} from "@ts-react-tdd/server/src/types";
+import Puppeteer, { Browser } from "puppeteer";
 
-const ReportsDir = process.env.REPORTS_DIR || "./reports"
+const ReportsDir = process.env.REPORTS_DIR || "."
 
 //TODO hot module reload for quick feedback cycle
 //TODO proper stack traces for unhandled promise rejections
@@ -26,6 +26,8 @@ test(
         const page = await context.newPage();
         try {
             await page.goto("http://localhost:3000");
+
+            await new Promise(resolve => setTimeout(resolve, 200));
 
             const addToCart = await page.waitForSelector("aria/Add to cart");
             expect(addToCart).not.toBeNull();

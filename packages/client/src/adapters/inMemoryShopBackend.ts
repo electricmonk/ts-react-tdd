@@ -1,12 +1,12 @@
-import { OrderAdapter} from "./order";
-import { ProductCatalog} from "./productCatalog";
-import {CartAdapter} from "./cart";
-import {Order, Product } from "@ts-react-tdd/server/src/types";
-import {nanoid} from "nanoid";
+import { anEmptyCart, CartSummary, LineItem, Order, Product } from "@ts-react-tdd/server/src/types";
+import { nanoid } from "nanoid";
+import { CartAdapter } from "./cart";
+import { OrderAdapter } from "./order";
+import { ProductCatalog } from "./productCatalog";
 
-interface Cart {
+type Cart = {
     id: string;
-    products: Product["id"][]
+    items: LineItem[]
 }
 
 type ProductTemplate = Omit<Product,"id">
@@ -24,19 +24,24 @@ export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCa
     }
 
     async addItem(cartId: string, productId: Product["id"]) {
-        this.#sessions[cartId] = this.#sessions[cartId] || {id: cartId, products: []};
-        this.#sessions[cartId].products.push(productId);
+        this.#sessions[cartId] = this.#sessions[cartId] || anEmptyCart(cartId);
+        this.#sessions[cartId].items.push(this.productToLineItem(productId));
     }
 
     async getCount(cartId: string) {
-        return this.#sessions[cartId]?.products.length ?? 0;
+        return this.#sessions[cartId]?.items.length ?? 0;
     }
+
+    async getCartSummary(cartId: string): Promise<CartSummary>{
+        return this.#sessions[cartId]
+    }
+
 
     async checkout(cartId: string) {
         const cart = this.#sessions[cartId];
         this.orders.push({
             id: cartId,
-            products: cart.products.map(id => this.products.find(product => id === product.id)!)
+            items: cart.items
         })
         return cartId
     }
@@ -51,6 +56,14 @@ export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCa
         return product;
     }
 
+    productToLineItem(id: Product["id"]): LineItem {
+        const product = this.products.find(p => id === p.id)!
+        return {
+            productId: product.id,
+            name: product.title,
+            price: product.price
+        }
+    }
 }
 
 export function inMemoryBackend(products: ProductTemplate[] = []) {

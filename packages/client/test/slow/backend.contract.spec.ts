@@ -1,11 +1,11 @@
-import {CartAdapter,} from "../../src/adapters/cart";
-import {InMemoryShopBackend} from "../../src/adapters/inMemoryShopBackend";
-import {nanoid} from "nanoid";
-import {ProductCatalog} from "../../src/adapters/productCatalog";
-import {OrderAdapter} from "../../src/adapters/order";
-import {HTTPShopBackend} from "../../src/adapters/HTTPShopBackend";
+import { aProduct, Product } from "@ts-react-tdd/server/src/types";
 import axios from "axios";
-import {aProduct, Product} from "@ts-react-tdd/server/src/types";
+import { nanoid } from "nanoid";
+import { CartAdapter } from "../../src/adapters/cart";
+import { HTTPShopBackend } from "../../src/adapters/HTTPShopBackend";
+import { InMemoryShopBackend } from "../../src/adapters/inMemoryShopBackend";
+import { OrderAdapter } from "../../src/adapters/order";
+import { ProductCatalog } from "../../src/adapters/productCatalog";
 
 interface Harness {
   backend: OrderAdapter & ProductCatalog & CartAdapter,
@@ -31,6 +31,23 @@ const adapters: Array<[string, () => Harness]> = [
 
 describe.each(adapters)("The %s shop adapter", (_, backendFactory) => {
 
+  it("returns cart summary", async () => {
+    const {backend, createProduct } = backendFactory();
+
+    const cartId = nanoid();
+    const product = await createProduct(aProduct());
+    await backend.addItem(cartId, product.id);
+
+    const cartSummary = await backend.getCartSummary(cartId);
+    expect(cartSummary).not.toBeNull();
+    expect(cartSummary!.items).toHaveLength(1);
+    expect(cartSummary!.items).toContainEqual(expect.objectContaining({
+      productId: product.id,
+      name: product.title,
+      price: product.price
+    }));
+  });
+
   it("creates an order from a cart", async () => {
     const {backend, createProduct } = backendFactory();
     const cartId = nanoid();
@@ -42,8 +59,12 @@ describe.each(adapters)("The %s shop adapter", (_, backendFactory) => {
     const order = await backend.getOrder(orderId);
 
     expect(order).not.toBeNull();
-    expect(order!.products).toHaveLength(1);
-    expect(order!.products).toContainEqual(expect.objectContaining(product));
+    expect(order!.items).toHaveLength(1);
+    expect(order!.items).toContainEqual(expect.objectContaining({
+      productId: product.id,
+      name: product.title,
+      price: product.price
+    }));
   })
 
   it("finds all products", async () => {

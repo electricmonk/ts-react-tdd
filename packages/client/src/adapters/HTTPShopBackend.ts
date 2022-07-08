@@ -1,7 +1,7 @@
 import axios from "axios";
 import {CartAdapter} from "./cart";
 import {ProductCatalog} from "./productCatalog";
-import {Order, Product} from "@ts-react-tdd/server/src/types";
+import {CartSummary, Order, Product} from "@ts-react-tdd/server/src/types";
 import {OrderAdapter} from "./order";
 
 export class HTTPShopBackend implements CartAdapter, OrderAdapter, ProductCatalog {
@@ -12,7 +12,9 @@ export class HTTPShopBackend implements CartAdapter, OrderAdapter, ProductCatalo
         (await axios.post<void>(`${this.url}/cart/${cartId}`, {productId})).data;
 
     getCount = async (cartId: string) =>
-        (await axios.get<number>(`${this.url}/cart/${cartId}`)).data;
+        (await axios.get<number>(`${this.url}/cart/${cartId}/count`)).data;
+
+    getCartSummary = async (cartId: string) => (await axios.get<CartSummary>(`${this.url}/cart/${cartId}`)).data;
 
     checkout = async (cartId: string) => (await axios.post<string>(`${this.url}/checkout/${cartId}`)).data;
 
