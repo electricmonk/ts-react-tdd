@@ -1,7 +1,5 @@
 import express from "express";
-import { MongoDBOrderRepository } from "./order.repo";
-import { MongoDBProductRepository } from "./product.repo";
-import { anEmptyCart, LineItem, Product } from "./types";
+import { anEmptyCart, LineItem, Order, Product } from "./types";
 
 
 type Cart = {
@@ -9,7 +7,19 @@ type Cart = {
     items: LineItem[];
 }
 
-export function createRoutes(productRepo: MongoDBProductRepository, orderRepo: MongoDBOrderRepository) {
+export interface ProductRepository {
+    findById(productId: Product["id"]): Promise<Product | undefined>;
+    create(template: Omit<Product, "id">): Promise<Product>;
+    findAll(): Promise<Product[]>;
+}
+
+export interface OrderRepository {
+    create(order: Omit<Order, "id">): Promise<Order>;
+    findById(orderId: string): Promise<Order | null>;
+
+}
+
+export function createRoutes(productRepo: ProductRepository, orderRepo: OrderRepository) {
     const sessions: Record<string, Cart> = {};
 
     const router = express.Router();
@@ -67,8 +77,13 @@ export function createRoutes(productRepo: MongoDBProductRepository, orderRepo: M
         res.status(201).send(product);
     })
 
-    router.get("/products", async (_, res) => {
-        res.send(await productRepo.findAll());
+    router.get("/products", (_, res) => {
+        // const products = await productRepo.findAll();
+        // res.send(await productRepo.findAll());
+        productRepo.findAll()
+            .then(products => 
+                res.json(products))
+            .catch(console.error)
     })
     return router;
 }

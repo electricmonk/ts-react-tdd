@@ -20,6 +20,8 @@
     "html-webpack-plugin": "^5.5.0",
     "jest": "^28.1.1",
     "jest-environment-jsdom": "^28.1.1",
+    "mock-express-response": "^0.3.0",
+    "nock": "^13.2.8",
     "puppeteer": "^14.3.0",
     "ts-jest": "^28.0.4",
     "ts-loader": "^9.3.0",
