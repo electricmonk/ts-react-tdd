@@ -18,7 +18,7 @@ export const Cart: React.FC<CartProps> = ({id}) => {
     }, [id]);
 
     const checkout = async () => {
-         const orderId = await cart.checkout(id)
+        const orderId = await cart.checkout(id)
         navigate("/order-summary/" + orderId)
     }
 

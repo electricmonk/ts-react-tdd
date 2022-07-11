@@ -77,7 +77,7 @@ function aFakeRequest(options: any, bodyStream: PassThrough) {
 
 function aFakeResponse() {
   const headers: Record<string, string> = {}
-  let statusCode: number = 200;
+  let _statusCode: number = 200;
   const responseEmitter = new EventEmitter();
 
   const res = {
@@ -89,23 +89,30 @@ function aFakeResponse() {
     _onPendingData: (length: number) => { },
 
     status: (code: number) => {
-      statusCode = code;
+      _statusCode = code;
       return res;
+    },
+
+    set statusCode(code: number) {
+      _statusCode = code;
+    },
+
+    get statusCode(): number {
+      return _statusCode;
+    },
+
+    get rawHeaders(): string[] {
+      return headersInputToRawArray(headers);
+
     },
 
     end: (chunk: Uint8Array | string) => {
       responseEmitter.emit('data', toBuffer(chunk));
       responseEmitter.emit('end');
     },
-
-    toXHRResponse: () => ({
-      headers,
-      rawHeaders: headersInputToRawArray(headers),
-      statusCode,
-      on: responseEmitter.on.bind(responseEmitter),
-      once: responseEmitter.on.bind(responseEmitter),
-      removeAllListeners: responseEmitter.removeAllListeners.bind(responseEmitter),
-    })
+    on: responseEmitter.on.bind(responseEmitter),
+    once: responseEmitter.on.bind(responseEmitter),
+    removeAllListeners: responseEmitter.removeAllListeners.bind(responseEmitter),
   };
 
   return res;
@@ -115,7 +122,7 @@ export function wireHttpCallsTo(logic: Application) {
   global.setImmediate = jest.useRealTimers as unknown as typeof setImmediate;
 
   overrideRequests(function (proto: string, overriddenRequest: unknown, rawArgs: unknown[]) {
-
+    let invoked = false;
     try {
       const bodyStream = new PassThrough();
       const { options, callback } = normalizeClientRequestArgs(...rawArgs);
@@ -123,8 +130,22 @@ export function wireHttpCallsTo(logic: Application) {
       const expressRequest = aFakeRequest(options, bodyStream);
       const expressResponse = aFakeResponse();
 
-      setTimeout(() => logic(expressRequest, expressResponse as unknown as Response ), 0); // so that the calling code can subscribe to calls before we execute the logic TODO consider doing this in an event handler
+      function invokeServer() {
+        if (!invoked) {
+          invoked = true;
+          logic(expressRequest, expressResponse as unknown as Response )
+          console.log('server invoked');
+        }
+      }
 
+      function respond() {
+        console.log('calling callback');
+        callback.bind(overriddenRequest)(expressResponse)
+        console.log('called callback');
+      }
+      
+      // setTimeout(invokeServer, 0); // so that the calling code can subscribe to calls before we execute the logic TODO consider doing this in an event handler
+      
       return {
         on: (event: string, callback: () => any) => { 
         },
@@ -133,12 +154,13 @@ export function wireHttpCallsTo(logic: Application) {
         setHeader: (key: string, value: string) => expressRequest.headers[key.toLowerCase()] = value,
         destroy: () => { },
         write: (data: any, encoding: BufferEncoding) => {
+          process.nextTick(invokeServer);
           bodyStream.write(data, encoding);
         },
         end: () => {
+          process.nextTick(invokeServer);
           bodyStream.end();
-          const httpResponse = expressResponse.toXHRResponse(); // at this point headers have been sent so it's ok to create rawHeaders
-          callback.bind(overriddenRequest)(httpResponse);
+          respond();
         },
       };
 

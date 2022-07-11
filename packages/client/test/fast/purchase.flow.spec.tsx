@@ -1,10 +1,10 @@
-import { fireEvent, render, within } from "@testing-library/react";
+import { configure, fireEvent, render, within } from "@testing-library/react";
 import { aProduct } from "@ts-react-tdd/server/src/types";
 import { MemoryRouter } from "react-router-dom";
 import { IOContext } from "../../src/adapters/context";
 import { inMemoryServerLogic } from "../../src/adapters/InMemoryServerLogic";
 import { App } from "../../src/components/App";
- 
+configure({asyncUtilTimeout: 5000});
 
 
 test("a user can purchase a product, see the confirmation page and see their order summary", async () => {
@@ -39,4 +39,4 @@ test("a user can purchase a product, see the confirmation page and see their ord
 
     close();
 
-})
+}, 300000)
