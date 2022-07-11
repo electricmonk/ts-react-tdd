@@ -1,7 +1,6 @@
 import { OrderRepository, ProductRepository } from "@ts-react-tdd/server/src/routes";
 import { createServerLogic } from "@ts-react-tdd/server/src/server";
 import { Order, Product } from "@ts-react-tdd/server/src/types";
-import { EventEmitter } from 'events';
 import { Application, Response } from 'express';
 import { nanoid } from "nanoid";
 import { headersFieldNamesToLowerCase, headersInputToRawArray, normalizeClientRequestArgs, overrideRequests, restoreOverriddenRequests } from 'nock/lib/common';
@@ -78,7 +77,7 @@ function aFakeRequest(options: any, bodyStream: PassThrough) {
 function aFakeResponse() {
   const headers: Record<string, string> = {}
   let _statusCode: number = 200;
-  const responseEmitter = new EventEmitter();
+  const responseStream = new PassThrough();
 
   const res = {
     headers,
@@ -105,14 +104,13 @@ function aFakeResponse() {
       return headersInputToRawArray(headers);
 
     },
-
     end: (chunk: Uint8Array | string) => {
-      responseEmitter.emit('data', toBuffer(chunk));
-      responseEmitter.emit('end');
+      responseStream.write(toBuffer(chunk));
+      responseStream.end();
     },
-    on: responseEmitter.on.bind(responseEmitter),
-    once: responseEmitter.on.bind(responseEmitter),
-    removeAllListeners: responseEmitter.removeAllListeners.bind(responseEmitter),
+    on: responseStream.on.bind(responseStream),
+    once: responseStream.on.bind(responseStream),
+    removeAllListeners: responseStream.removeAllListeners.bind(responseStream),
   };
 
   return res;
