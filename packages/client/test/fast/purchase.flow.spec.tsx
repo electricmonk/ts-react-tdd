@@ -11,7 +11,7 @@ test("a user can purchase a product, see the confirmation page and see their ord
 
     const moogOne = aProduct({title: "Moog One"});
     // const backend = inMemoryBackend([moogOne]);
-    const {backend } = inMemoryServerLogic([moogOne]);
+    const {backend, unwire } = inMemoryServerLogic([moogOne]);
     const adapters = {
         cart: backend,
         productCatalog: backend,
@@ -37,6 +37,6 @@ test("a user can purchase a product, see the confirmation page and see their ord
     expect(await app.findByText("Thank You")).toBeTruthy();
     expect(await app.findByText(moogOne.title)).toBeTruthy();
 
-    close();
+    unwire();
 
 }, 300000)

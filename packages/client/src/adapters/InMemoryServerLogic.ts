@@ -1,7 +1,7 @@
 import { OrderRepository, ProductRepository } from "@ts-react-tdd/server/src/routes";
 import { createServerLogic } from "@ts-react-tdd/server/src/server";
 import { Order, Product } from "@ts-react-tdd/server/src/types";
-import { EventEmitter } from 'events';
+import { EventEmitter } from "events";
 import { Application, Response } from 'express';
 import { nanoid } from "nanoid";
 import { headersFieldNamesToLowerCase, headersInputToRawArray, normalizeClientRequestArgs, overrideRequests, restoreOverriddenRequests } from 'nock/lib/common';
@@ -75,10 +75,10 @@ function aFakeRequest(options: any, bodyStream: PassThrough) {
   return expressRequest;
 }
 
-function aFakeResponse() {
+function aFakeResponse(connection: EventEmitter) {
   const headers: Record<string, string> = {}
   let _statusCode: number = 200;
-  const responseEmitter = new EventEmitter();
+  const responseStream = new PassThrough();
 
   const res = {
     headers,
@@ -107,12 +107,15 @@ function aFakeResponse() {
     },
 
     end: (chunk: Uint8Array | string) => {
-      responseEmitter.emit('data', toBuffer(chunk));
-      responseEmitter.emit('end');
+      console.log('ending response');
+      responseStream.write(toBuffer(chunk));
+      responseStream.end();
+      connection.emit('done');
+      console.log('ended response');
     },
-    on: responseEmitter.on.bind(responseEmitter),
-    once: responseEmitter.on.bind(responseEmitter),
-    removeAllListeners: responseEmitter.removeAllListeners.bind(responseEmitter),
+    on: responseStream.on.bind(responseStream),
+    once: responseStream.on.bind(responseStream),
+    removeAllListeners: responseStream.removeAllListeners.bind(responseStream),
   };
 
   return res;
@@ -124,11 +127,12 @@ export function wireHttpCallsTo(logic: Application) {
   overrideRequests(function (proto: string, overriddenRequest: unknown, rawArgs: unknown[]) {
     let invoked = false;
     try {
+      const connection = new EventEmitter();
       const bodyStream = new PassThrough();
       const { options, callback } = normalizeClientRequestArgs(...rawArgs);
 
       const expressRequest = aFakeRequest(options, bodyStream);
-      const expressResponse = aFakeResponse();
+      const expressResponse = aFakeResponse(connection);
 
       function invokeServer() {
         if (!invoked) {
@@ -143,6 +147,9 @@ export function wireHttpCallsTo(logic: Application) {
         callback.bind(overriddenRequest)(expressResponse)
         console.log('called callback');
       }
+
+      connection.once('flush', invokeServer);
+      connection.once('done', respond);
       
       // setTimeout(invokeServer, 0); // so that the calling code can subscribe to calls before we execute the logic TODO consider doing this in an event handler
       
@@ -154,13 +161,11 @@ export function wireHttpCallsTo(logic: Application) {
         setHeader: (key: string, value: string) => expressRequest.headers[key.toLowerCase()] = value,
         destroy: () => { },
         write: (data: any, encoding: BufferEncoding) => {
-          process.nextTick(invokeServer);
           bodyStream.write(data, encoding);
         },
         end: () => {
-          process.nextTick(invokeServer);
+          connection.emit('flush')
           bodyStream.end();
-          respond();
         },
       };
 
@@ -173,13 +178,14 @@ export function wireHttpCallsTo(logic: Application) {
 export function unwireHttpCalls() {
   restoreOverriddenRequests();
 }
-export function inMemoryServerLogic(products: ProductTemplate[] = []): {backend: HTTPShopBackend, createProduct: ProductRepository["create"]} {
+export function inMemoryServerLogic(products: ProductTemplate[] = []) {
   const productRepo = new InMemoryProductRepository(products);
   const logic = createServerLogic(productRepo, new InMemoryOrderRepository());
   wireHttpCallsTo(logic);
   return {
         backend: new HTTPShopBackend(''),
         createProduct: productRepo.create.bind(productRepo),
+        unwire: unwireHttpCalls,
   };
 }
 

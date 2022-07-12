@@ -14,7 +14,7 @@ import { InMemoryOrderRepository, InMemoryProductRepository, unwireHttpCalls, wi
 describe('the http bridge', () => {
   afterEach(unwireHttpCalls);
 
-  test('get', async () => {
+  test('get json', async () => {
     const p1 = aProduct();
     const logic = createServerLogic(new InMemoryProductRepository([p1]), new InMemoryOrderRepository());
     wireHttpCallsTo(logic);
@@ -22,14 +22,15 @@ describe('the http bridge', () => {
     expect(products).toContainEqual(expect.objectContaining(p1));
   })
 
-  test('post', async () => {
+  test('post json', async () => {
     const productRepo = new InMemoryProductRepository();
     const logic = createServerLogic(productRepo, new InMemoryOrderRepository());
     wireHttpCallsTo(logic);
 
     const p1 = aProduct();
-    await axios.post(`http://localhost/products/`, p1)
+    const res = await axios.post(`http://localhost/products/`, p1)
     expect(await productRepo.findAll()).toContainEqual(expect.objectContaining(p1));
+    expect(res.data).toEqual(expect.objectContaining(p1));
   })
 
   test('get with cookie', async () => {
@@ -93,7 +94,7 @@ describe('the http bridge', () => {
       })
     })
 
-    expect((await axios.post(`http://localhost/status`, {code:418})).status).toBe(418);
+    expect((await axios.post(`http://localhost/status`, {code:201})).status).toBe(201);
 
   })
 
@@ -112,7 +113,7 @@ describe('the http bridge', () => {
 
   test('post sends headers', async () => {
     setupRoutes(route => {
-      route.get('/header/', (req, res) => {
+      route.post('/header', (req, res) => {
         const headers = req.body as Record<string, string>;
         Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v));
         res.end();
@@ -122,7 +123,7 @@ describe('the http bridge', () => {
     expect(res.headers["k1"]).toEqual("v1");
     expect(res.headers["k2"]).toEqual("v2");
 
-  })
+  }, 1000000)
 
 })
 
