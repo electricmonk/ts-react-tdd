@@ -1,46 +1,56 @@
-import { createServerLogic } from "@ts-react-tdd/server/src/server";
-import { aProduct } from "@ts-react-tdd/server/src/types";
 import axios from "axios";
 
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import express from "express";
 import Cookies from "js-cookie";
 import { nanoid } from "nanoid";
-import { HTTPShopBackend } from "../../src/adapters/HTTPShopBackend";
-import { InMemoryOrderRepository, InMemoryProductRepository, unwireHttpCalls, wireHttpCallsTo } from "../../src/adapters/InMemoryServerLogic";
-
-
+import { unwireHttpCalls, wireHttpCallsTo } from "../../src/adapters/express.http.bridge";
 
 describe('the http bridge', () => {
   afterEach(unwireHttpCalls);
 
   test('get json', async () => {
-    const p1 = aProduct();
-    const logic = createServerLogic(new InMemoryProductRepository([p1]), new InMemoryOrderRepository());
-    wireHttpCallsTo(logic);
-    const products = await new HTTPShopBackend('').findAllProducts();
-    expect(products).toContainEqual(expect.objectContaining(p1));
+    const obj = {foo: "bar"};
+
+    setupRoutes((route) => {
+      route.get('/json', (req, res) => {
+        res.json(obj);
+      })
+    });
+
+    await expect(axios.get(`http://localhost/json`)).resolves.toEqual(expect.objectContaining({data: obj}));
   })
 
   test('post json', async () => {
-    const productRepo = new InMemoryProductRepository();
-    const logic = createServerLogic(productRepo, new InMemoryOrderRepository());
-    wireHttpCallsTo(logic);
+    setupRoutes((route) => {
+      route.post('/echo/json', (req, res) => {
+        res.json(req.body);
+      })
+    });
 
-    const p1 = aProduct();
-    const res = await axios.post(`http://localhost/products/`, p1)
-    expect(await productRepo.findAll()).toContainEqual(expect.objectContaining(p1));
-    expect(res.data).toEqual(expect.objectContaining(p1));
+    const data = {foo: "bar"};
+
+    await expect(axios.post(`http://localhost/echo/json`, data)).resolves.toEqual(expect.objectContaining({data}));
+
   })
 
-  test('get with cookie', async () => {
-    const productRepo = new InMemoryProductRepository();
-    const logic = createServerLogic(productRepo, new InMemoryOrderRepository());
-    wireHttpCallsTo(logic);
+  // fails because node_modules/jsdom/lib/jsdom/living/helpers/http-request.js thinks response.headers["set-cookie"] is an array
+  test.skip('get and set cookies', async () => {
+    const cookieName = 'fookie';
 
-    Cookies.set('foo', 'bar');
-    const count = await new HTTPShopBackend('').getCount('foo');
-    expect(count).toBe(0);
+    setupRoutes((route) => {
+      route.get('/cookie', (req, res) => {
+        if (req.cookies[cookieName] != 'bar') {
+          res.sendStatus(400);
+        } else {          
+          res.cookie(cookieName, 'baz', { httpOnly: false }).sendStatus(200);
+        }
+      })
+    });
+
+    Cookies.set(cookieName, 'bar');
+    await expect(axios.get(`http://localhost/cookie`)).resolves.toEqual(expect.objectContaining({headers: expect.objectContaining({"set-cookie": `${cookieName}=baz`})}));
 
   })
 
@@ -55,9 +65,7 @@ describe('the http bridge', () => {
     });
 
     const word = nanoid();
-    const res = await axios.get<string>(`http://localhost/echo/param/${word}`);
-    expect(res.data).toEqual(word);
-
+    await expect(axios.get(`http://localhost/echo/param/${word}`)).resolves.toEqual(expect.objectContaining({data: word}));
   })
 
   test('keeps state between requests', async () => {
@@ -68,10 +76,9 @@ describe('the http bridge', () => {
         res.json(count);
       })
     });
-
-    expect((await axios.get<number>(`http://localhost/add`)).data).toBe(1);
-    expect((await axios.get<number>(`http://localhost/add`)).data).toBe(2);
-    expect((await axios.get<number>(`http://localhost/add`)).data).toBe(3);
+    await expect(axios.get(`http://localhost/add`)).resolves.toEqual(expect.objectContaining({data: 1}));
+    await expect(axios.get(`http://localhost/add`)).resolves.toEqual(expect.objectContaining({data: 2}));
+    await expect(axios.get(`http://localhost/add`)).resolves.toEqual(expect.objectContaining({data: 3}));
   });
 
   test('status defaults to 200', async () => {
@@ -81,7 +88,7 @@ describe('the http bridge', () => {
       })
     })
 
-    expect((await axios.get(`http://localhost/status`)).status).toBe(200);
+    await expect(axios.get(`http://localhost/status`)).resolves.toEqual(expect.objectContaining({status: 200}));
 
   })
 
@@ -89,41 +96,42 @@ describe('the http bridge', () => {
   test('post sends status code', async () => {
     setupRoutes(route => {
       route.post('/status', (req, res) => {
-        const {code} = req.body;
-        res.sendStatus(parseInt(code));
+        const {status} = req.body;
+        res.sendStatus(parseInt(status));
       })
     })
 
-    expect((await axios.post(`http://localhost/status`, {code:201})).status).toBe(201);
+    const status = 201;
+    await expect(axios.post(`http://localhost/status`, {status})).resolves.toEqual(expect.objectContaining({status}));
 
   })
 
   test('get sends status code', async () => {
     setupRoutes(route => {
-      route.get('/status/:code', (req, res) => {
-        const {code} = req.params;
-        res.sendStatus(parseInt(code));
+      route.get('/status/:status', (req, res) => {
+        const {status} = req.params;
+        res.sendStatus(parseInt(status));
       })
     })
 
-    expect((await axios.get(`http://localhost/status/203`)).status).toBe(203);
+    const status = 203;
+    await expect(axios.get(`http://localhost/status/${status}`)).resolves.toEqual(expect.objectContaining({status}));
 
   })
 
 
-  test('post sends headers', async () => {
+  test('echoes headers', async () => {
     setupRoutes(route => {
-      route.post('/header', (req, res) => {
-        const headers = req.body as Record<string, string>;
-        Object.entries(headers).forEach(([k, v]) => res.setHeader(k, v));
-        res.end();
+      route.get('/echo/headers', (req, res) => {
+        res
+          .set(Object.fromEntries(Object.entries(req.headers).filter(([key]) => key.startsWith('x-'))))
+          .end();
       })
     })
-    const res = await axios.post(`http://localhost/header`, {k1: "v1", k2: "v2"});
-    expect(res.headers["k1"]).toEqual("v1");
-    expect(res.headers["k2"]).toEqual("v2");
 
-  }, 1000000)
+    const headers =  {"x-foo": "foo", "x-bar": "baz"};
+    expect(axios.get(`http://localhost/echo/headers`, {headers})).resolves.toEqual(expect.objectContaining({headers: expect.objectContaining(headers)}));
+  })
 
 })
 
@@ -132,6 +140,7 @@ function setupRoutes(makeRoutes: (router: express.Router) => any) {
   const app = express();
   const router = express.Router();
   makeRoutes(router);
+  app.use(cookieParser())
   app.use(bodyParser.json());
   app.use(router);
   wireHttpCallsTo(app);
