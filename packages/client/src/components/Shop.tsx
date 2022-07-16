@@ -11,7 +11,7 @@ interface ShopProps {
 }
 
 export const Shop: React.FC<ShopProps> = ({cartAdapter, cartId, productCatalog}) => {
-    const [itemCount, setItemCount] = useState<number>(0);
+    const [itemCount, setItemCount] = useState<number | undefined>();
     const [products, setProducts] = useState<Product[]>([])
     const addItem = async (productId: Product["id"]) => {
         await cartAdapter.addItem(cartId, productId);
@@ -23,7 +23,7 @@ export const Shop: React.FC<ShopProps> = ({cartAdapter, cartId, productCatalog})
     useEffect(() => {
         cartAdapter.getCount(cartId).then(setItemCount);
         productCatalog.findAllProducts().then(setProducts)
-    }, []);
+    }, [cartId]);
 
     const viewCart = () => {
         navigate('/cart');
@@ -31,7 +31,7 @@ export const Shop: React.FC<ShopProps> = ({cartAdapter, cartId, productCatalog})
 
     return (
         <section>
-            <p aria-label={`${itemCount} items in cart`}>{itemCount} items in cart</p>
+            {itemCount !== undefined && <p aria-label={`${itemCount} items in cart`}>{itemCount} items in cart</p>}
             {itemCount && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
 
             {products.map(({title, id}) => <div key={id} aria-label={title}>
