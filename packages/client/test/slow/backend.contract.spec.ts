@@ -1,8 +1,8 @@
 import { aProduct, Product } from "@ts-react-tdd/server/src/types";
 import axios from "axios";
+import { unwireHttpCalls } from "azzarqa";
 import { nanoid } from "nanoid";
 import { CartAdapter } from "../../src/adapters/cart";
-import { unwireHttpCalls } from "../../src/adapters/express.http.bridge";
 import { HTTPShopBackend } from "../../src/adapters/HTTPShopBackend";
 import { inMemoryServerLogic } from "../../src/adapters/InMemoryServerLogic";
 import { InMemoryShopBackend } from "../../src/adapters/inMemoryShopBackend";

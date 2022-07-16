@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
-import { MongoDBOrderRepository } from "./order.repo";
-import { MongoDBProductRepository } from "./product.repo";
+import { MongoDBOrderRepository } from "./adapters/order.repo";
+import { MongoDBProductRepository } from "./adapters/product.repo";
 import { createServerLogic } from "./server";
 
 async function startServer() {

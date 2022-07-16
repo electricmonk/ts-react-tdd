@@ -21,6 +21,7 @@ export type Product = {
   title: string;
   price: number; // in a real-life scenario this would be a BigInt
 }
+export type ProductTemplate = Omit<Product,"id">
 
 export const aProduct = (overrides: Partial<Product> = {}) => ({ title: faker.name.findName(), price: Math.round(Math.random() * 1000), ...overrides });
 

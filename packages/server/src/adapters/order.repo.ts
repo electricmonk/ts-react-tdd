@@ -1,5 +1,5 @@
 import {Collection, Db, ObjectId, WithId} from "mongodb";
-import {Order} from "./types";
+import {Order} from "../types";
 
 type MongoOrder = Omit<Order, "id">;
 const docToOrder = ({_id, ...rest}: WithId<MongoOrder>) => ({id: _id.toString(), ...rest});

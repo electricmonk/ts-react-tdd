@@ -881,11 +881,14 @@ __metadata:
     "@jest/globals": ^28.1.1
     "@testing-library/react": ^13.3.0
     "@ts-react-tdd/server": 1.0.0
+    "@types/express": ^4.17.13
     "@types/jest": ^28.1.1
     "@types/js-cookie": ^3.0.2
     "@types/react": ^18.0.12
     "@types/react-dom": ^18.0.5
     axios: ^0.27.2
+    azzarqa: ^0.0.3
+    express: ^4.18.1
     html-webpack-plugin: ^5.5.0
     jest: ^28.1.1
     jest-environment-jsdom: ^28.1.1
@@ -922,6 +925,7 @@ __metadata:
     jest: ^28.1.1
     mongodb: ^4.7.0
     morgan: ^1.10.0
+    nanoid: ^4.0.0
     nodemon: ^2.0.16
     ts-jest: ^28.0.4
     ts-node: ^10.8.1
@@ -1916,6 +1920,17 @@ __metadata:
     follow-redirects: ^1.14.9
     form-data: ^4.0.0
   checksum: 38cb7540465fe8c4102850c4368053c21683af85c5fdf0ea619f9628abbcb59415d1e22ebc8a6390d2bbc9b58a9806c874f139767389c862ec9b772235f06854
+  languageName: node
+  linkType: hard
+
+"azzarqa@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "azzarqa@npm:0.0.3"
+  dependencies:
+    nock: ^13.2.8
+  peerDependencies:
+    express: ^4.18.1
+  checksum: 90efbdc7d6e4465749b798c388a381497b10a05b081acace2675558a57e216a9e77488b3f5add6e52ccd74ca3e73bfe349473fab1023b42f36edd4e921b70d90
   languageName: node
   linkType: hard
 
