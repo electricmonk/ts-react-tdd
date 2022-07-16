@@ -2,4 +2,5 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": true
 },
+"git.mergeEditor": true,
 }

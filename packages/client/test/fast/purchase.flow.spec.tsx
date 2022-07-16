@@ -1,13 +1,12 @@
-import { configure, fireEvent, render, within } from "@testing-library/react";
+import { fireEvent, render, within } from "@testing-library/react";
 import { aProduct } from "@ts-react-tdd/server/src/types";
 import { MemoryRouter } from "react-router-dom";
 import { IOContext } from "../../src/adapters/context";
 import { inMemoryServerLogic } from "../../src/adapters/InMemoryServerLogic";
 import { App } from "../../src/components/App";
-configure({asyncUtilTimeout: 5000});
 
 
-test("a user can purchase a product, see the confirmation page and see their order summary", async () => {
+test("a user can purchase a product, see the confirmation page and see their order summary, after which the cart is reset", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
     // const backend = inMemoryBackend([moogOne]);
@@ -19,7 +18,7 @@ test("a user can purchase a product, see the confirmation page and see their ord
       }
 
     const app = render(<MemoryRouter><IOContext.Provider value={adapters}><App/></IOContext.Provider></MemoryRouter>);
-    app.getByText("0 items in cart");
+    await app.findByText("0 items in cart");
 
     const product = await app.findByLabelText(moogOne.title)
     const add = within(product).getByText("Add");
@@ -37,6 +36,9 @@ test("a user can purchase a product, see the confirmation page and see their ord
     expect(await app.findByText("Thank You")).toBeTruthy();
     expect(await app.findByText(moogOne.title)).toBeTruthy();
 
+    fireEvent.click(app.getByText("Home"));
+
+    await app.findByText("0 items in cart");
     unwire();
 
-}, 300000)
+})
