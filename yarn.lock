@@ -872,7 +872,7 @@ __metadata:
     jest: ^28.1.1
     jest-environment-jsdom: ^28.1.1
     nanoid: ^4.0.0
-    puppeteer: ^14.3.0
+    puppeteer: ^15.4.0
     react: ^18.1.0
     react-dom: ^18.1.0
     react-router-dom: ^6.3.0
@@ -2862,10 +2862,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devtools-protocol@npm:0.0.1001819":
-  version: 0.0.1001819
-  resolution: "devtools-protocol@npm:0.0.1001819"
-  checksum: 156e7c6703ec6c203e0bc1d68393fcd768de45bf225ca7b2d6bd106d8dc4ab0e8f38c518ce158c73d83a96db8ef32ae06dc9b4edd70e94660253dc2622619947
+"devtools-protocol@npm:0.0.1011705":
+  version: 0.0.1011705
+  resolution: "devtools-protocol@npm:0.0.1011705"
+  checksum: 2e97d2eda45bbdfd549b3e2fdb441b8803387cacebdb7eb186bd06a24beb65cda116ea0163b6895da2edb7ac85ce8602bb4e961c99849ff3a43eab24fb70b300
   languageName: node
   linkType: hard
 
@@ -5948,13 +5948,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer@npm:^14.3.0":
-  version: 14.4.1
-  resolution: "puppeteer@npm:14.4.1"
+"puppeteer@npm:^15.4.0":
+  version: 15.4.0
+  resolution: "puppeteer@npm:15.4.0"
   dependencies:
     cross-fetch: 3.1.5
     debug: 4.3.4
-    devtools-protocol: 0.0.1001819
+    devtools-protocol: 0.0.1011705
     extract-zip: 2.0.1
     https-proxy-agent: 5.0.1
     pkg-dir: 4.2.0
@@ -5963,8 +5963,8 @@ __metadata:
     rimraf: 3.0.2
     tar-fs: 2.1.1
     unbzip2-stream: 1.4.3
-    ws: 8.7.0
-  checksum: 21566e220dbbc8df8c59209b71de83630bf7ba8f9fa117c9f2452370430471fa3bbeb9c19bbfb95bc8078d65454d9000240441050ba6c9880de1954038af0a08
+    ws: 8.8.0
+  checksum: 57f05042a58e5b5b6b9457da8b88680a0db170f9a6cd44153a8da03d5888ff0d9fcfc0bb1c4e72e1e3f19cb7707091e883ec5a7d0a2172ee36e29741ab8d7288
   languageName: node
   linkType: hard
 
@@ -7683,22 +7683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:8.7.0":
-  version: 8.7.0
-  resolution: "ws@npm:8.7.0"
-  peerDependencies:
-    bufferutil: ^4.0.1
-    utf-8-validate: ^5.0.2
-  peerDependenciesMeta:
-    bufferutil:
-      optional: true
-    utf-8-validate:
-      optional: true
-  checksum: 078fa2dbc06b31a45e0057b19e2930d26c222622e355955afe019c9b9b25f62eb2a8eff7cceabdad04910ecd2bd6ef4fa48e6f3673f2fdddff02a6e4c2459584
-  languageName: node
-  linkType: hard
-
-"ws@npm:^8.2.3, ws@npm:^8.4.2":
+"ws@npm:8.8.0, ws@npm:^8.2.3, ws@npm:^8.4.2":
   version: 8.8.0
   resolution: "ws@npm:8.8.0"
   peerDependencies:
