@@ -1,5 +1,5 @@
-import {Collection, Db, ObjectId, WithId} from "mongodb";
-import {Order} from "../types";
+import { Collection, Db, ObjectId, WithId } from "mongodb";
+import { Order } from "../types";
 
 type MongoOrder = Omit<Order, "id">;
 const docToOrder = ({_id, ...rest}: WithId<MongoOrder>) => ({id: _id.toString(), ...rest});
@@ -12,7 +12,7 @@ export class MongoDBOrderRepository {
     }
 
     async create(order: MongoOrder): Promise<Order> {
-        const res = await this.orders.insertOne(order);
+        const res = await this.orders.insertOne({_id: new ObjectId(), ...order});
         return {
             id: res.insertedId.toString(),
             ...order
@@ -20,7 +20,7 @@ export class MongoDBOrderRepository {
     }
 
     async findById(orderId: string): Promise<Order | null> {
-        const order = await this.orders.findOne({_id: new ObjectId(orderId)})
-        return order && docToOrder(order);
+        return this.orders.findOne({_id: {$eq: new ObjectId(orderId)}})
+            .then(doc => doc ? docToOrder(doc) : null)
     }
 }
