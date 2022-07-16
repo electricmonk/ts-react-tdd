@@ -6,12 +6,12 @@
     "compilerOptions": {}
   },
   "compilerOptions": {
+    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
     "noUnusedLocals": true,
     "isolatedModules": true
   },

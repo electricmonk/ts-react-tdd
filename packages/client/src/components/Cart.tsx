@@ -1,31 +1,33 @@
-import { CartAdapter } from "../adapters/cart";
-import React from "react";
+import { CartSummary } from "@ts-react-tdd/server/src/types";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { IOContext } from "../adapters/context";
 
 interface CartProps {
-  cartAdapter: CartAdapter;
-  cartId: string;
-  onCheckout: () => Promise<void> | void;
+    id: string;
+    onCheckout: () => any,
+
 }
 
-export const Cart: React.FC<CartProps> = ({
-  cartId,
-  onCheckout,
-  cartAdapter,
-}) => {
-  const navigate = useNavigate();
-  const checkout = async () => {
-    const orderId = await cartAdapter.checkout(cartId);
-    // awaiting non-async functions does nothing so it's safe.
-    await onCheckout();
-    navigate("/order-summary/" + orderId);
-  };
+export const Cart: React.FC<CartProps> = ({id, onCheckout}) => {
+    const navigate = useNavigate();
+    const { cart } = useContext(IOContext);
+    const [ summary, setSummary ] = useState<CartSummary | undefined>();
 
-  return (
-    <section>
-      <button aria-label="Checkout" role="button" onClick={checkout}>
-        Checkout
-      </button>
-    </section>
-  );
+    useEffect(() => {
+        cart.getCartSummary(id).then(setSummary);
+    }, [id]);
+
+    const checkout = async () => {
+        const orderId = await cart.checkout(id)
+        await onCheckout(); // it's ok to await on an non-async function
+        navigate("/order-summary/" + orderId)
+    }
+
+    return <section>
+        <ul>
+            {summary?.items.map(({productId, name}) => <li key={productId}>{name}</li>)}
+        </ul>
+        <button aria-label="Checkout" role="button" onClick={checkout}>Checkout</button>
+    </section>;
 };
