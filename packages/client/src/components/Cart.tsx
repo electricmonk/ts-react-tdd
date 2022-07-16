@@ -1,9 +1,8 @@
-import { CartAdapter } from "../adapters/cart";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { IOContext } from "../adapters/context";
 
 interface CartProps {
-  cartAdapter: CartAdapter;
   cartId: string;
   onCheckout: () => Promise<void> | void;
 }
@@ -11,13 +10,13 @@ interface CartProps {
 export const Cart: React.FC<CartProps> = ({
   cartId,
   onCheckout,
-  cartAdapter,
 }) => {
   const navigate = useNavigate();
+  const { cart } = useContext(IOContext);
+
   const checkout = async () => {
-    const orderId = await cartAdapter.checkout(cartId);
-    // awaiting non-async functions does nothing so it's safe.
-    await onCheckout();
+    const orderId = await cart.checkout(cartId);
+    await onCheckout();  // awaiting non-async functions does nothing so it's safe.
     navigate("/order-summary/" + orderId);
   };
 

@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {OrderAdapter} from "../adapters/order";
+import React, {useContext, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {Order} from "@ts-react-tdd/server/src/types";
+import { IOContext } from "../adapters/context";
 
 
 interface OrderSummaryProps {
-    orderAdapter: OrderAdapter
 }
 
 
-export const OrderSummary: React.FC<OrderSummaryProps> = ({orderAdapter}) => {
+export const OrderSummary: React.FC<OrderSummaryProps> = () => {
+    const { orders } = useContext(IOContext);
     const navigate = useNavigate();
 
     const [order, setOrder] = useState<Order | null>(null)
@@ -18,7 +18,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({orderAdapter}) => {
     useEffect(() => {
         if (orderId) {
             (async () => {
-                const order = await orderAdapter.getOrder(orderId);
+                const order = await orders.getOrder(orderId);
                 setOrder(order)
             })();
         }
