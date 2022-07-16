@@ -13,7 +13,7 @@ const screenshotOnFailure = async (page: Puppeteer.Page) => {
 
 let browser: Browser;
 beforeAll(async () => {
-    browser = await Puppeteer.launch({slowMo: 4, headless: false});
+    browser = await Puppeteer.launch({slowMo: 4});
 }, 60 * 1000);
 
 
