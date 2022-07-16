@@ -32,4 +32,9 @@ export class MongoDBProductRepository {
             .map(docToProduct)
             .toArray();
     }
+
+    async findById(productId: string): Promise<Product | undefined> {
+        return this.products.findOne({_id: {$eq: new ObjectId(productId)}})
+            .then(doc => doc ? docToProduct(doc) : undefined)
+    }
 }
