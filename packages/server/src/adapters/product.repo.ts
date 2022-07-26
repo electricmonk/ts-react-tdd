@@ -1,18 +1,17 @@
-import {Collection, Db, ObjectId, WithId} from "mongodb";
-import {Product} from "./types";
+import { Collection, Db, ObjectId, WithId } from "mongodb";
+import { Product, ProductTemplate } from "../types";
 
-type MongoProduct = Omit<Product, "id">;
-const docToProduct = ({_id, ...rest}: WithId<MongoProduct>) => ({id: _id.toString(), ...rest});
+const docToProduct = ({_id, ...rest}: WithId<ProductTemplate>) => ({id: _id.toString(), ...rest});
 
 export class MongoDBProductRepository {
-    private products: Collection<MongoProduct>;
+    private products: Collection<ProductTemplate>;
 
     constructor(db: Db) {
         this.products = db.collection("products");
     }
 
 
-    async create(fields: MongoProduct): Promise<Product> {
+    async create(fields: ProductTemplate): Promise<Product> {
         const id = new ObjectId();
         await this.products.insertOne({_id: id, ...fields});
         return {
@@ -32,4 +31,12 @@ export class MongoDBProductRepository {
             .map(docToProduct)
             .toArray();
     }
+
+    async findById(productId: string): Promise<Product | undefined> {
+        return this.products.findOne({_id: {$eq: new ObjectId(productId)}})
+            .then(doc => doc ? docToProduct(doc) : undefined)
+    }
 }
+
+
+  

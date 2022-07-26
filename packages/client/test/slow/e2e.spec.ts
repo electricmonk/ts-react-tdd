@@ -1,6 +1,6 @@
-import Puppeteer, {Browser} from "puppeteer";
+import { aProduct } from "@ts-react-tdd/server/src/types";
 import axios from "axios";
-import {aProduct} from "@ts-react-tdd/server/src/types";
+import Puppeteer, { Browser } from "puppeteer";
 
 const screenshotOnFailure = async (page: Puppeteer.Page) => {
     const ReportsDir = process.env.REPORTS_DIR || "./reports"

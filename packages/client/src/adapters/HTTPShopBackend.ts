@@ -1,25 +1,38 @@
-import axios from "axios";
-import {CartAdapter} from "./cart";
-import {ProductCatalog} from "./productCatalog";
-import {Order, Product} from "@ts-react-tdd/server/src/types";
-import {OrderAdapter} from "./order";
+import { CartSummary, Order, Product } from "@ts-react-tdd/server/src/types";
+import axios, { AxiosInstance } from "axios";
+import { CartAdapter } from "./cart";
+import { OrderAdapter } from "./order";
+import { ProductCatalog } from "./productCatalog";
 
 export class HTTPShopBackend implements CartAdapter, OrderAdapter, ProductCatalog {
-    constructor(private url: string) {
+    private axios: AxiosInstance;
+    constructor(url: string) {
+        this.axios = axios.create({ baseURL: url })
     }
 
     addItem = async (cartId: string, productId: string) =>
-        (await axios.post<void>(`${this.url}/cart/${cartId}`, {productId})).data;
+        (await this.axios.post<void>(`/cart/${cartId}`, { productId })).data;
 
     getCount = async (cartId: string) =>
-        (await axios.get<number>(`${this.url}/cart/${cartId}`)).data;
+        (await this.axios.get<number>(`/cart/${cartId}/count`)).data;
 
-    checkout = async (cartId: string) => (await axios.post<string>(`${this.url}/checkout/${cartId}`)).data;
+    getCartSummary = async (cartId: string) => (await this.axios.get<CartSummary>(`/cart/${cartId}`)).data;
+
+    checkout = async (cartId: string) => (await this.axios.post<string>(`/checkout/${cartId}`)).data;
 
     getOrder = async (orderId: string) =>
-        (await axios.get<Order>(`${this.url}/order/${orderId}`)).data;
+        (await this.axios.get<Order>(`/order/${orderId}`)).data;
 
     findAllProducts = async () =>
-        (await axios.get<Product[]>(`${this.url}/products`)).data;
+        (await this.axios.get<Product[]>(`/products`)).data;
 
+}
+
+export function httpBackend(url: string) {
+    const backend = new HTTPShopBackend(url);
+    return {
+        cart: backend,
+        productCatalog: backend,
+        orders: backend,
+    }
 }
