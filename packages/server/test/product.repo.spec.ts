@@ -1,8 +1,8 @@
 import { MongoClient } from "mongodb";
 import { InMemoryProductRepository } from "../src/adapters/fakes";
 import { MongoDBProductRepository } from "../src/adapters/product.repo";
+import { aProduct } from "../src/builders";
 import { ProductRepository } from "../src/routes";
-import { aProduct } from "../src/types";
 
 type Adapter = [string, () => Promise<{repo: ProductRepository, close: () => any}>]
 

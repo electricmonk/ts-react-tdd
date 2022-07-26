@@ -1,5 +1,5 @@
 import { fireEvent, render, within } from "@testing-library/react";
-import { aProduct } from "@ts-react-tdd/server/src/types";
+import { aProduct } from "@ts-react-tdd/server/src/builders";
 import { MemoryRouter } from "react-router-dom";
 import { IOContext } from "../../src/adapters/context";
 import { inMemoryServerLogic } from "../../src/adapters/InMemoryServerLogic";
@@ -9,7 +9,6 @@ import { App } from "../../src/components/App";
 test("a user can purchase a product, see the confirmation page and see their order summary, after which the cart is reset", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
-    // const backend = inMemoryBackend([moogOne]);
     const {backend, unwire } = inMemoryServerLogic([moogOne]);
     const adapters = {
         cart: backend,
