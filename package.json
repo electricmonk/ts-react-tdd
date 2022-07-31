@@ -5,7 +5,7 @@
     "dev": "yarn workspaces foreach -piv -j unlimited run dev",
     "serve:ci": "yarn workspaces foreach -piv -j unlimited run serve:ci",
     "test": "jest",
-    "test:ci": "jestest --runInBand"
+    "test:ci": "jest --runInBand"
   },
   "workspaces": [
     "packages/*"
