@@ -4583,7 +4583,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^28.1.1":
+"jest@npm:^28.1.1, jest@npm:^28.1.3":
   version: 28.1.3
   resolution: "jest@npm:28.1.3"
   dependencies:
@@ -6044,6 +6044,7 @@ __metadata:
   dependencies:
     "@types/cookie-parser": ^1.4.3
     cookie-parser: ^1.4.6
+    jest: ^28.1.3
     winston: ^3.8.1
   languageName: unknown
   linkType: soft

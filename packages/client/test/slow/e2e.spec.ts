@@ -7,13 +7,14 @@ const screenshotOnFailure = async (page: Puppeteer.Page) => {
     await page.screenshot({path: `${ReportsDir}/e2e-failed.png`});
 }
 
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 //TODO hot module reload for quick feedback cycle
 //TODO proper stack traces for unhandled promise rejections
 
 let browser: Browser;
 beforeAll(async () => {
-    browser = await Puppeteer.launch({slowMo: 4});
+    browser = await Puppeteer.launch({slowMo: 10});
 }, 60 * 1000);
 
 
@@ -31,10 +32,14 @@ test(
         try {
             await page.goto("http://localhost:3000");
 
+            await sleep(100); // this is here to work around a bug where aria waitForSelector fails to find the element even though it's there
+
             const addToCart = await page.waitForSelector("aria/Add to cart");
             expect(addToCart).not.toBeNull();
             await addToCart!.click();
-    
+
+            await sleep(100); // this is here to work around a bug where aria waitForSelector fails to find the element even though it's there
+
             expect(await page.waitForSelector("aria/1 items in cart")).not.toBeNull();
     
             const viewCart = await page.$("aria/View cart");
@@ -68,6 +73,8 @@ test(
         try {
 
             await page.goto("http://localhost:3000");
+
+            await sleep(100); // this is here to work around a bug where aria waitForSelector fails to find the element even though it's there
 
             const addToCart = await page.waitForSelector("aria/Add to cart");
             expect(addToCart).not.toBeNull();
