@@ -1,20 +1,29 @@
-import { OrderAdapter} from "./order";
-import { ProductCatalog} from "./productCatalog";
-import {CartAdapter} from "./cart";
-import {Order, Product } from "@ts-react-tdd/server/src/types";
-import {nanoid} from "nanoid";
+import { anEmptyCart } from "@ts-react-tdd/server/src/builders";
+import {  CartSummary, LineItem, Order, Product } from "@ts-react-tdd/server/src/types";
+import { nanoid } from "nanoid";
+import { CartAdapter } from "./cart";
+import { OrderAdapter } from "./order";
+import { ProductCatalog } from "./productCatalog";
 
-interface Cart {
+type Cart = {
     id: string;
-    products: Product["id"][]
+    items: LineItem[]
 }
 
+type ProductTemplate = Omit<Product,"id">
+
+/**
+ * This class is here for reference purposes.
+ * Our current recommendation is to use azzarqa to run a fresh server instance for each UI test wherever possible.
+ * 
+ * The in-memory backend pattern remains relevant when your backend is not a Node.js app and must be faked in Javascript.
+ */
 export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCatalog {
     #sessions: Record<string, Cart> = {};
     private orders: Order[] = [];
     private products: Product[] = [];
 
-    constructor(products: Omit<Product,"id">[]) {
+    constructor(products: ProductTemplate[]) {
         products.forEach(p => this.createProduct(p));
     }
 
@@ -23,19 +32,24 @@ export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCa
     }
 
     async addItem(cartId: string, productId: Product["id"]) {
-        this.#sessions[cartId] = this.#sessions[cartId] || {id: cartId, products: []};
-        this.#sessions[cartId].products.push(productId);
+        this.#sessions[cartId] = this.#sessions[cartId] || anEmptyCart(cartId);
+        this.#sessions[cartId].items.push(this.productToLineItem(productId));
     }
 
     async getCount(cartId: string) {
-        return this.#sessions[cartId]?.products.length ?? 0;
+        return this.#sessions[cartId]?.items.length ?? 0;
     }
+
+    async getCartSummary(cartId: string): Promise<CartSummary>{
+        return this.#sessions[cartId]
+    }
+
 
     async checkout(cartId: string) {
         const cart = this.#sessions[cartId];
         this.orders.push({
             id: cartId,
-            products: cart.products.map(id => this.products.find(product => id === product.id)!)
+            items: cart.items
         })
         return cartId
     }
@@ -50,4 +64,21 @@ export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCa
         return product;
     }
 
+    productToLineItem(id: Product["id"]): LineItem {
+        const product = this.products.find(p => id === p.id)!
+        return {
+            productId: product.id,
+            name: product.title,
+            price: product.price
+        }
+    }
 }
+
+export function inMemoryBackend(products: ProductTemplate[] = []) {
+    const backend = new InMemoryShopBackend(products);
+    return {
+      cart: backend,
+      productCatalog: backend,
+      orders: backend,
+    }
+  }

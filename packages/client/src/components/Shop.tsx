@@ -1,39 +1,39 @@
-import React from "react";
-import {CartAdapter} from "../adapters/cart";
-import { ProductCatalog} from "../adapters/productCatalog";
-import {useNavigate} from "react-router-dom";
-import {Product} from "@ts-react-tdd/server/src/types";
-import { useMutation, useQuery } from "react-query";
+import { Product as ProductSummary } from "@ts-react-tdd/server/src/types";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { IOContext } from "../adapters/context";
 
 interface ShopProps {
-    cartAdapter: CartAdapter;
-    productCatalog: ProductCatalog
     cartId: string;
 }
 
-export const Shop: React.FC<ShopProps> = ({cartAdapter, cartId, productCatalog}) => {
+export const Shop: React.FC<ShopProps> = ({cartId}) => {
+    const { cart, productCatalog } = useContext(IOContext);
+    
+    const [itemCount, setItemCount] = useState<number | undefined>();
+    const [products, setProducts] = useState<ProductSummary[]>([])
+    const addItem = async (productId: ProductSummary["id"]) => {
+        await cart.addItem(cartId, productId);
+        setItemCount(await cart.getCount(cartId));
+    };
+
     const navigate = useNavigate();
 
-    const itemCount = useQuery("itemCount", () => cartAdapter.getCount(cartId));
-    const products = useQuery("products", () => productCatalog.findAllProducts());
-    const addItem = useMutation(async (productId: Product["id"]) => {
-        await cartAdapter.addItem(cartId, productId);
-        itemCount.refetch();
-    })
+    useEffect(() => {
+        cart.getCount(cartId).then(setItemCount);
+        productCatalog.findAllProducts().then(setProducts)
+    }, [cartId]);
 
     const viewCart = () => {
         navigate('/cart');
     }
 
-    return (
-        <section>
-            { itemCount.isFetched && ( <p aria-label={`${itemCount.data} items in cart`}>{itemCount.data} items in cart</p>)}
-           
-            { itemCount.isFetched && !!itemCount.data && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
-            
-            <Products addItem={addItem.mutate} products={products.data} isLoading={products.isLoading} error={products.error}/>
+    return <section>
+            {itemCount !== undefined && <p aria-label={`${itemCount} items in cart`}>{itemCount} items in cart</p>}
+            {itemCount && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
+            {products.map(product => <ProductSummary product={product} onAddItem={addItem}/>)}
         </section>
-    );
+    ;
 };
 
 const Products: React.FC<{products: Product[] | undefined, isLoading: boolean, error: unknown | null, addItem: (id: string) => void}> = ({products, isLoading, error, addItem}) => {

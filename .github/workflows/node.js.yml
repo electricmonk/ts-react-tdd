@@ -34,9 +34,11 @@ jobs:
     - run: yarn dev &
     - run: yarn dlx wait-on tcp:3000
     - run: yarn dlx wait-on tcp:8080
-    - run: yarn test
-    - uses: actions/upload-artifact@v3
+    - run: mkdir -p ${{ runner.temp }}/reports
+    - run: export REPORTS_DIR=${{ runner.temp }}/reports && set -o pipefail; yarn test:ci | bash ./predate.sh
+    - name: Upload screenshot on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
       with:
         name: Test Reports
-        if: always()
-        path: ./packages/client/reports
+        path: ${{ runner.temp }}/reports

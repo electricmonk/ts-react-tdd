@@ -15,4 +15,4 @@ node_modules
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
-packages/client/reports
+**/reports/

@@ -1,30 +1,51 @@
-import {MongoDBProductRepository} from "./product.repo";
-import {MongoDBOrderRepository} from "./order.repo";
 import express from "express";
-import {Product} from "./types";
+import { LineItem, Order, Product } from "./types";
 
 
-interface Cart {
+type Cart = {
     id: string;
-    productIds: Product["id"][];
+    items: LineItem[];
 }
 
-export function createRoutes(productRepo: MongoDBProductRepository, orderRepo: MongoDBOrderRepository) {
+export interface ProductRepository {
+    findById(productId: Product["id"]): Promise<Product | undefined>;
+    create(template: Omit<Product, "id">): Promise<Product>;
+    findAll(): Promise<Product[]>;
+}
+
+export interface OrderRepository {
+    create(order: Omit<Order, "id">): Promise<Order>;
+    findById(orderId: string): Promise<Order | null>;
+
+}
+
+export function createRoutes(productRepo: ProductRepository, orderRepo: OrderRepository) {
     const sessions: Record<string, Cart> = {};
 
     const router = express.Router();
 
     router.get("/cart/:cartId", (req, res) => {
         const {cartId} = req.params;
-        res.json(sessions[cartId]?.productIds.length || 0);
+        res.json(sessions[cartId]);
     });
 
-    router.post("/cart/:cartId", (req, res) => {
+    router.get("/cart/:cartId/count", (req, res) => {
+        const {cartId} = req.params;
+        res.json(sessions[cartId]?.items.length || 0);
+    });
+
+    router.post("/cart/:cartId", async (req, res) => {
         const {cartId} = req.params;
         const {productId} = req.body;
-        sessions[cartId] = sessions[cartId] || {id: cartId, productIds: []};
-        sessions[cartId].productIds.push(productId)
-        res.sendStatus(201);
+        sessions[cartId] = sessions[cartId] || {id: cartId, items: []};
+        const product = await productRepo.findById(productId);
+
+        if (product) {
+            sessions[cartId].items.push(({productId, name: product.title, price: product.price}))
+            res.sendStatus(201);    
+        } else {
+            res.sendStatus(404);    
+        }
     });
 
     router.post("/checkout/:cartId", async (req, res) => {
@@ -33,9 +54,8 @@ export function createRoutes(productRepo: MongoDBProductRepository, orderRepo: M
         if (!cart) {
             throw new Error(`no cart with id ${cartId} was found`);
         } else {
-            const products = await productRepo.findByIds(cart.productIds);
 
-            const order = await orderRepo.create({products});
+            const order = await orderRepo.create({items: cart.items});
             res.status(201).send(order.id);
         }
     });

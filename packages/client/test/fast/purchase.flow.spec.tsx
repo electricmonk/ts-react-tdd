@@ -1,18 +1,22 @@
-import {fireEvent, render, within} from "@testing-library/react";
-import {App} from "../../src/components/App";
-import {MemoryRouter} from "react-router-dom";
-import {InMemoryShopBackend} from "../../src/adapters/inMemoryShopBackend";
-import {aProduct} from "@ts-react-tdd/server/src/types";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { fireEvent, render, within } from "@testing-library/react";
+import { aProduct } from "@ts-react-tdd/server/src/builders";
+import { MemoryRouter } from "react-router-dom";
+import { IOContext } from "../../src/adapters/context";
+import { inMemoryServerLogic } from "../../src/adapters/InMemoryServerLogic";
+import { App } from "../../src/components/App";
 
 
-
-test("a user can purchase a product, see the confirmation page and get a confirmation email", async () => {
+test("a user can purchase a product, see the confirmation page and see their order summary, after which the cart is reset", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
-    const cartAdapter = new InMemoryShopBackend([moogOne]);
+    const {backend, unwire } = inMemoryServerLogic([moogOne]);
+    const adapters = {
+        cart: backend,
+        productCatalog: backend,
+        orders: backend,
+      }
 
-    const app = render(<QueryClientProvider client={new QueryClient()}><MemoryRouter><App cartAdapter={cartAdapter} catalog={cartAdapter} orderAdapter={cartAdapter}/></MemoryRouter></QueryClientProvider>);
+    const app = render(<MemoryRouter><IOContext.Provider value={adapters}><App/></IOContext.Provider></MemoryRouter>);
     await app.findByText("0 items in cart");
 
     const product = await app.findByLabelText(moogOne.title)
@@ -24,10 +28,16 @@ test("a user can purchase a product, see the confirmation page and get a confirm
     const viewCart = await app.findByText("View cart");
     fireEvent.click(viewCart);
 
-    const checkout = await app.findByText("Checkout");
+    expect(await app.findByText(moogOne.title)).toBeTruthy();
+    const checkout = await app.getByText("Checkout");
     fireEvent.click(checkout);
 
     expect(await app.findByText("Thank You")).toBeTruthy();
     expect(await app.findByText(moogOne.title)).toBeTruthy();
+
+    fireEvent.click(app.getByText("Home"));
+
+    await app.findByText("0 items in cart");
+    unwire();
 
 })

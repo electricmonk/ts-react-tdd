@@ -1,8 +1,9 @@
 import { createRoot } from 'react-dom/client';
-import {App} from "./components/App";
+import { BrowserRouter } from "react-router-dom";
+import { IOContext } from './adapters/context';
 import {BrowserRouter} from "react-router-dom";
 import {HTTPShopBackend} from "./adapters/HTTPShopBackend";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { App } from "./components/App";
 
 const config = {
     apiUrl: process.env.API_URL!,
