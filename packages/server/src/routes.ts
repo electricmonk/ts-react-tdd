@@ -1,5 +1,5 @@
 import express from "express";
-import { anEmptyCart, LineItem, Order, Product } from "./types";
+import { LineItem, Order, Product } from "./types";
 
 
 type Cart = {
@@ -37,7 +37,7 @@ export function createRoutes(productRepo: ProductRepository, orderRepo: OrderRep
     router.post("/cart/:cartId", async (req, res) => {
         const {cartId} = req.params;
         const {productId} = req.body;
-        sessions[cartId] = sessions[cartId] || anEmptyCart(cartId);
+        sessions[cartId] = sessions[cartId] || {id: cartId, items: []};
         const product = await productRepo.findById(productId);
 
         if (product) {
@@ -77,13 +77,8 @@ export function createRoutes(productRepo: ProductRepository, orderRepo: OrderRep
         res.status(201).send(product);
     })
 
-    router.get("/products", (_, res) => {
-        // const products = await productRepo.findAll();
-        // res.send(await productRepo.findAll());
-        productRepo.findAll()
-            .then(products => 
-                res.json(products))
-            .catch(console.error)
+    router.get("/products", async (_, res) => {
+        res.send(await productRepo.findAll());
     })
     return router;
 }

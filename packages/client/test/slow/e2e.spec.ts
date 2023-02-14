@@ -1,4 +1,4 @@
-import { aProduct } from "@ts-react-tdd/server/src/types";
+import { aProduct } from "@ts-react-tdd/server/src/builders";
 import axios from "axios";
 import Puppeteer, { Browser } from "puppeteer";
 

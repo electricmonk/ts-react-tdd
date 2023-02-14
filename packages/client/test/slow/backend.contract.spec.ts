@@ -1,4 +1,5 @@
-import { aProduct, Product } from "@ts-react-tdd/server/src/types";
+import { aProduct } from "@ts-react-tdd/server/src/builders";
+import { Product } from "@ts-react-tdd/server/src/types";
 import axios from "axios";
 import { unwireHttpCalls } from "azzarqa";
 import { nanoid } from "nanoid";

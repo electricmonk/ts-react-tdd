@@ -1,5 +1,3 @@
-import { faker } from "@faker-js/faker";
-
 export type LineItem = {
   name: string;
   price: number;
@@ -23,6 +21,3 @@ export type Product = {
 }
 export type ProductTemplate = Omit<Product,"id">
 
-export const aProduct = (overrides: Partial<Product> = {}) => ({ title: faker.name.findName(), price: Math.round(Math.random() * 1000), ...overrides });
-
-export const anEmptyCart = (id: string) =>  ({id, items: []});

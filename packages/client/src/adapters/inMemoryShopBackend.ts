@@ -1,4 +1,5 @@
-import { anEmptyCart, CartSummary, LineItem, Order, Product } from "@ts-react-tdd/server/src/types";
+import { anEmptyCart } from "@ts-react-tdd/server/src/builders";
+import {  CartSummary, LineItem, Order, Product } from "@ts-react-tdd/server/src/types";
 import { nanoid } from "nanoid";
 import { CartAdapter } from "./cart";
 import { OrderAdapter } from "./order";
@@ -10,6 +11,13 @@ type Cart = {
 }
 
 type ProductTemplate = Omit<Product,"id">
+
+/**
+ * This class is here for reference purposes.
+ * Our current recommendation is to use azzarqa to run a fresh server instance for each UI test wherever possible.
+ * 
+ * The in-memory backend pattern remains relevant when your backend is not a Node.js app and must be faked in Javascript.
+ */
 export class InMemoryShopBackend implements CartAdapter, OrderAdapter, ProductCatalog {
     #sessions: Record<string, Cart> = {};
     private orders: Order[] = [];
