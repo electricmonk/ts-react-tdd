@@ -1,43 +1,36 @@
-import { fireEvent, render, within } from "@testing-library/react";
+import { fireEvent, within } from "@testing-library/react";
 import { aProduct } from "@ts-react-tdd/server/src/builders";
-import { MemoryRouter } from "react-router-dom";
-import { IOContext } from "../../src/adapters/context";
-import { inMemoryServerLogic } from "../../src/adapters/InMemoryServerLogic";
-import { App } from "../../src/components/App";
+import { makeApp } from "../../src/adapters/harness";
 
 
 test("a user can purchase a product, see the confirmation page and see their order summary, after which the cart is reset", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
-    const {backend, unwire } = inMemoryServerLogic([moogOne]);
-    const adapters = {
-        cart: backend,
-        productCatalog: backend,
-        orders: backend,
-      }
+    const { runInHarness } = await makeApp([moogOne]);
 
-    const app = render(<MemoryRouter><IOContext.Provider value={adapters}><App/></IOContext.Provider></MemoryRouter>);
-    await app.findByText("0 items in cart");
+    await runInHarness(async (app) => {
+      await app.findByText("0 items in cart");
 
-    const product = await app.findByLabelText(moogOne.title)
-    const add = within(product).getByText("Add");
-    fireEvent.click(add);
-
-    await app.findByText("1 items in cart");
-
-    const viewCart = await app.findByText("View cart");
-    fireEvent.click(viewCart);
-
-    expect(await app.findByText(moogOne.title)).toBeTruthy();
-    const checkout = await app.getByText("Checkout");
-    fireEvent.click(checkout);
-
-    expect(await app.findByText("Thank You")).toBeTruthy();
-    expect(await app.findByText(moogOne.title)).toBeTruthy();
-
-    fireEvent.click(app.getByText("Home"));
-
-    await app.findByText("0 items in cart");
-    unwire();
+      const product = await app.findByLabelText(moogOne.title)
+      const add = within(product).getByText("Add");
+      fireEvent.click(add);
+  
+      await app.findByText("1 items in cart");
+  
+      const viewCart = await app.findByText("View cart");
+      fireEvent.click(viewCart);
+  
+      expect(await app.findByText(moogOne.title)).toBeTruthy();
+      const checkout = app.getByText("Checkout");
+      fireEvent.click(checkout);
+  
+      expect(await app.findByText("Thank You")).toBeTruthy();
+      expect(await app.findByText(moogOne.title)).toBeTruthy();
+  
+      fireEvent.click(app.getByText("Home"));
+  
+      await app.findByText("0 items in cart");
+  
+    });
 
 })

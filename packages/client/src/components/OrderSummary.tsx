@@ -1,5 +1,5 @@
-import { Order } from "@ts-react-tdd/server/src/types";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
+import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { IOContext } from "../adapters/context";
 
@@ -12,8 +12,8 @@ export const OrderSummary: React.FC<OrderSummaryProps> = () => {
     const { orders } = useContext(IOContext);
     const navigate = useNavigate();
 
-    const [order, setOrder] = useState<Order | null>(null)
     const {orderId} = useParams<{ orderId: string }>();
+    const {data: order, isLoading, error} = useQuery("order", () => orders.getOrder(orderId!), {enabled: !!orderId});
 
     if (isLoading) {
         return <section>Loading...</section>
