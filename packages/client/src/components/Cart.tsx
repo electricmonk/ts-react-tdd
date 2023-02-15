@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
-import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { IOContext } from "../adapters/context";
+import React from "react";
+import {useNavigate} from "react-router-dom";
+import {useCartSummary} from "../hooks/cart";
 
 interface CartProps {
     id: string;
@@ -11,15 +10,12 @@ interface CartProps {
 
 export const Cart: React.FC<CartProps> = ({id, onCheckout}) => {
     const navigate = useNavigate();
-    const { cart } = useContext(IOContext);
-    const {data: summary, isLoading, error} = useQuery({
-        queryKey: 'cartSummary',
-        queryFn: () => cart.getCartSummary(id)
-    })
 
-    const checkout = async () => {
-        const orderId = await cart.checkout(id)
-        await onCheckout(); // it's ok to await on an non-async function
+    const { isLoading, error, summary, checkout } = useCartSummary(id);
+
+    const checkoutAndViewOrder = async () => {
+        const orderId = await checkout();
+        await onCheckout();
         navigate("/order-summary/" + orderId)
     }
 
@@ -35,6 +31,6 @@ export const Cart: React.FC<CartProps> = ({id, onCheckout}) => {
         <ul>
             {summary?.items.map(({productId, name}) => <li key={productId}>{name}</li>)}
         </ul>
-        <button aria-label="Checkout" role="button" onClick={checkout}>Checkout</button>
-    </section>;
+        <button aria-label="Checkout" role="button" onClick={checkoutAndViewOrder}>Checkout</button>
+    </section>
 };

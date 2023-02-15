@@ -1,33 +1,21 @@
-import { Product } from "@ts-react-tdd/server/src/types";
-import React, { useContext } from "react";
-import { useMutation, useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { IOContext } from "../adapters/context";
+import {Product} from "@ts-react-tdd/server/src/types";
+import React from "react";
+import {useProducts} from "../hooks/products";
+import {useCartWidget} from "../hooks/cart";
 
 interface ShopProps {
     cartId: string;
 }
 
 export const Shop: React.FC<ShopProps> = ({ cartId }) => {
-    const { cart, productCatalog } = useContext(IOContext);
 
-    const itemCount = useQuery("itemCount", () => cart.getCount(cartId));
-    const products = useQuery("products", () => productCatalog.findAllProducts());
-    const addItem = useMutation(async (productId: Product["id"]) => {
-        await cart.addItem(cartId, productId);
-        itemCount.refetch();
-    })
-
-    const navigate = useNavigate();
-
-    const viewCart = () => {
-        navigate('/cart');
-    }
+    const { products, productsLoading, productsError } = useProducts();
+    const { viewCart, addItem, itemCount, fetched } = useCartWidget(cartId);
 
     return <section>
-        {itemCount.isFetched && (<p aria-label={`${itemCount.data} items in cart`}>{itemCount.data} items in cart</p>)}
-        {itemCount.isFetched && !!itemCount.data && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
-        <Products addItem={addItem.mutate} products={products.data} isLoading={products.isLoading} error={products.error} />
+        {fetched && (<p aria-label={`${itemCount} items in cart`}>{itemCount} items in cart</p>)}
+        {fetched && !!itemCount && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
+        <Products addItem={addItem} products={products} isLoading={productsLoading} error={productsError} />
     </section>    
 };
 

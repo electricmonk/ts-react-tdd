@@ -1,19 +1,11 @@
-import React, { useContext } from "react";
-import { useQuery } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import { IOContext } from "../adapters/context";
+import React from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {useOrder} from "../hooks/order";
 
-
-interface OrderSummaryProps {
-}
-
-
-export const OrderSummary: React.FC<OrderSummaryProps> = () => {
-    const { orders } = useContext(IOContext);
+export const OrderSummary: React.FC<{}> = () => {
     const navigate = useNavigate();
-
     const {orderId} = useParams<{ orderId: string }>();
-    const {data: order, isLoading, error} = useQuery("order", () => orders.getOrder(orderId!), {enabled: !!orderId});
+    const { order, isLoading, error } = useOrder(orderId!);
 
     if (isLoading) {
         return <section>Loading...</section>
