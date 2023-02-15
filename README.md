@@ -24,11 +24,16 @@ We chose typescript over other solutions (such as ELM, ReasonML or ClojureScript
 
 #### React
 
-#### Jest
-Although not without issues, Jest has proven to be a mature and effective testing library. It offers a more cohesive framework than the alternative (Mocha/Chai),
-it integrates very nicely with [React Testing Library](https://github.com/testing-library/react-testing-library) and its plugin API is less messy in our opinion.
+#### Vite
+A modern opinionated bundler with out-of-the-box Typescript support. And it's REALLY fast. 
 
-#### Puppeteer
+#### Vitest
+Although not without issues, Vitest has proven to be a fast and effective testing library. Its main advantage over Jest is that you have a single config file,
+instead of managing separate Jest and Webpack configurations. It integrates very nicely with [React Testing Library](https://github.com/testing-library/react-testing-library) 
+and has backwards support for Jest's testing API.
+
+#### Playwright
+A mature framework for E2E tests with an API similar to Testing Library.
 
 ### Engineering Principles
 
