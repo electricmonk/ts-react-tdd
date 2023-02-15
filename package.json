@@ -13,7 +13,8 @@
   "packageManager": "yarn@3.2.0",
   "devDependencies": {
     "@types/cookie-parser": "^1.4.3",
-    "cookie-parser": "^1.4.6"
+    "cookie-parser": "^1.4.6",
+    "jsdom": "^21.1.0"
   },
   "dependencies": {
     "winston": "^3.8.1"
