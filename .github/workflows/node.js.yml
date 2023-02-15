@@ -29,8 +29,7 @@ jobs:
     - run: mkdir ./packages/client/reports
     - run: yarn install
     - name: Install Playwright Browsers
-      run: yarn playwright install --with-deps
-    - run: yarn workspaces list
+      run: yarn workspace @ts-react-tdd/e2e playwright install --with-deps
     - run: docker compose -f packages/e2e/docker-compose.yml up -d
     - run: yarn dlx wait-on tcp:27017 
     - run: yarn dev &
