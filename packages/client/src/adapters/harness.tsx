@@ -1,15 +1,19 @@
-import { render } from "@testing-library/react";
-import { InMemoryOrderRepository, InMemoryProductRepository } from "@ts-react-tdd/server/src/adapters/fakes";
-import { createServerLogic } from "@ts-react-tdd/server/src/server";
-import { ProductTemplate } from "@ts-react-tdd/server/src/types";
-import { Express } from 'express';
-import { AddressInfo } from 'net';
-import { QueryClient, QueryClientProvider } from "react-query";
-import { MemoryRouter } from "react-router-dom";
-import { App } from "../components/App";
-import { IOContextProvider } from "./context";
+import {fireEvent, render, within} from "@testing-library/react";
+import {InMemoryOrderRepository, InMemoryProductRepository} from "@ts-react-tdd/server/src/adapters/fakes";
+import {createServerLogic} from "@ts-react-tdd/server/src/server";
+import {ProductTemplate} from "@ts-react-tdd/server/src/types";
+import {Express} from 'express';
+import {AddressInfo} from 'net';
+import {QueryClient, QueryClientProvider} from "react-query";
+import {MemoryRouter} from "react-router-dom";
+import {App} from "../components/App";
+import {IOContextProvider} from "./context";
 
 type Driver = ReturnType<typeof render> & {
+  addProductToCart: (title: string) => Promise<void>;
+  viewCart: () => Promise<void>;
+  checkout: () => Promise<void>;
+  home: () => Promise<void>;
 }
 
 export async function makeApp(products: ProductTemplate[] = []) {
@@ -23,8 +27,30 @@ export async function makeApp(products: ProductTemplate[] = []) {
   const runInHarness = async (testFn: (app: Driver) => Promise<any>) => {
     const app = render(<MemoryRouter><IOContextProvider backendUrl={baseUrl}> <QueryClientProvider client={queryClient}><App/></QueryClientProvider></IOContextProvider > </MemoryRouter>);
 
+    const addProductToCart = async (title: string) => {
+      const product = await app.findByLabelText(title)
+      const add = within(product).getByText("Add");
+      fireEvent.click(add);
+    }
+
+    const viewCart = async () => {
+      fireEvent.click(await app.findByText("View cart"));
+    }
+
+    const checkout = async () => {
+      fireEvent.click(app.getByText("Checkout"));
+    }
+
+    const home = async () => {
+      fireEvent.click(app.getByText("Home"));
+    }
+
     const driver = {
       ...app,
+      addProductToCart,
+      viewCart,
+      checkout,
+      home
     };
 
     try {

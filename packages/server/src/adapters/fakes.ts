@@ -23,7 +23,7 @@ export class InMemoryProductRepository {
 }
 
 export class InMemoryOrderRepository {
-  private orders: Order[] = [];
+  orders: Order[] = [];
 
   async create(order: Omit<Order, "id">): Promise<Order> {
     const created = {...order, id: nanoid()};
