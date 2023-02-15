@@ -1,0 +1,19 @@
+{
+  "extends": "ts-node/node14/tsconfig.json",
+  "ts-node": {
+    "files": true,
+
+    "compilerOptions": {}
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "isolatedModules": true
+  },
+  "include": ["src", "test"]
+}

@@ -1,6 +1,6 @@
 import { fireEvent, within } from "@testing-library/react";
 import { aProduct } from "@ts-react-tdd/server/src/builders";
-import { makeApp } from "../../src/adapters/harness";
+import { makeApp } from "../src/adapters/harness";
 
 
 test("a user can purchase a product, see the confirmation page and see their order summary, after which the cart is reset", async () => {

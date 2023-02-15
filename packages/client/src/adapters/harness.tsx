@@ -14,7 +14,8 @@ type Driver = ReturnType<typeof render> & {
 
 export async function makeApp(products: ProductTemplate[] = []) {
   const productRepo = new InMemoryProductRepository(products);
-  const logic = createServerLogic(productRepo, new InMemoryOrderRepository());
+  const orderRepo = new InMemoryOrderRepository();
+  const logic = createServerLogic(productRepo, orderRepo);
   const queryClient = new QueryClient();
 
   const { baseUrl, close } = await startServer(logic);
@@ -35,6 +36,7 @@ export async function makeApp(products: ProductTemplate[] = []) {
 
   return {
     productRepo,
+    orderRepo,
     runInHarness
   };
 }
