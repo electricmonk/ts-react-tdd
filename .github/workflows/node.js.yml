@@ -26,18 +26,20 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
+    - run: mkdir ./packages/client/reports
     - run: yarn install
-    - run: yarn workspaces list
-    - run: docker compose -f packages/client/test/slow/docker-compose.yml up -d
+    - name: Install Playwright Browsers
+      run: yarn workspace @ts-react-tdd/e2e playwright install --with-deps
+    - run: docker compose -f packages/e2e/docker-compose.yml up -d
     - run: yarn dlx wait-on tcp:27017 
     - run: yarn dev &
     - run: yarn dlx wait-on tcp:3000
     - run: yarn dlx wait-on tcp:8080
     - run: mkdir -p ${{ runner.temp }}/reports
-    - run: export REPORTS_DIR=${{ runner.temp }}/reports && set -o pipefail; yarn test:ci | bash ./predate.sh
-    - name: Upload screenshot on failure
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+    - run: set -o pipefail; yarn test:ci | bash ./predate.sh
+    - uses: actions/upload-artifact@v3
+      if: always()
       with:
-        name: Test Reports
-        path: ${{ runner.temp }}/reports
+        name: playwright-report
+        path: packages/e2e/playwright-report/
+        retention-days: 30

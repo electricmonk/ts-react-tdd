@@ -13,6 +13,6 @@ module.exports = {
   transform: {
     "node_modules/(nanoid|@faker-js/(?!locale))/.+\\.(j|t)sx?$": "ts-jest", //@fakerjs/faker/locale is huge and slows down transpilation
   },
-  transformIgnorePatterns: ["node_modules/(?!(nanoid|@faker-js)/.*)"],
+  transformIgnorePatterns: ["node_modules/(?!((nanoid|@faker-js)|@faker-js)/.*)"],
   setupFilesAfterEnv: ["./setupTests.js"],
 };
