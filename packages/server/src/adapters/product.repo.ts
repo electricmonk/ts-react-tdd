@@ -1,7 +1,7 @@
 import { Collection, Db, ObjectId, WithId } from "mongodb";
 import { Product, ProductTemplate } from "../types";
 
-const docToProduct = ({_id, ...rest}: WithId<ProductTemplate>) => ({id: _id.toString(), ...rest});
+const docToProduct = ({_id, ...rest}: WithId<ProductTemplate>) => Product.parse({id: _id.toString(), ...rest});
 
 export class MongoDBProductRepository {
     private products: Collection<ProductTemplate>;

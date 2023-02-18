@@ -1,5 +1,5 @@
 import express from "express";
-import { LineItem, Order, Product } from "./types";
+import {LineItem, Order, Product, ProductTemplate} from "./types";
 
 
 type Cart = {
@@ -73,7 +73,7 @@ export function createRoutes(productRepo: ProductRepository, orderRepo: OrderRep
 
 //TODO remove
     router.post("/products", async (req, res) => {
-        const product = await productRepo.create(req.body as Omit<Product, "id">);
+        const product = await productRepo.create(ProductTemplate.parse(req.body));
         res.status(201).send(product);
     })
 

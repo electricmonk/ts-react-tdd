@@ -2,7 +2,7 @@ import { Collection, Db, ObjectId, WithId } from "mongodb";
 import { Order } from "../types";
 
 type MongoOrder = Omit<Order, "id">;
-const docToOrder = ({_id, ...rest}: WithId<MongoOrder>) => ({id: _id.toString(), ...rest});
+const docToOrder = ({_id, ...rest}: WithId<MongoOrder>) => Order.parse({id: _id.toString(), ...rest});
 
 export class MongoDBOrderRepository {
     private orders: Collection<MongoOrder>;
