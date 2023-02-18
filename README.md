@@ -22,6 +22,11 @@ Using typescript will reduce the amount of potential runtime validations, force 
 
 We chose typescript over other solutions (such as ELM, ReasonML or ClojureScript) because it is a superset of javaScript: enriching the language with additional information without the need of learning a different grammar, its paradigms or its overall syntax.
 
+#### Zod
+
+Since the type system is compile-time only, we need some way to assert that the data we think we're parsing from Mongo / HTTP 
+actually complies to the schema we defined. Zod is a good TypeScript-first solution for schema management.
+
 #### React
 
 #### Vite

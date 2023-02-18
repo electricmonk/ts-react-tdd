@@ -16,23 +16,21 @@ export class HTTPShopBackend implements CartAdapter, OrderAdapter, ProductCatalo
     getCount = async (cartId: string) =>
         (await this.axios.get<number>(`/cart/${cartId}/count`)).data;
 
-    getCartSummary = async (cartId: string) => (await this.axios.get<CartSummary>(`/cart/${cartId}`)).data;
+    getCartSummary = async (cartId: string) => {
+        const res = await this.axios.get<CartSummary>(`/cart/${cartId}`);
+        return CartSummary.parse(res.data);
+    }
 
     checkout = async (cartId: string) => (await this.axios.post<string>(`/checkout/${cartId}`)).data;
 
-    getOrder = async (orderId: string) =>
-        (await this.axios.get<Order>(`/order/${orderId}`)).data;
+    getOrder = async (orderId: string) => {
+        const res = await this.axios.get<Order>(`/order/${orderId}`);
+        return Order.parse(res.data);
+    };
 
-    findAllProducts = async () =>
-        (await this.axios.get<Product[]>(`/products`)).data;
+    findAllProducts = async () => {
+        const res = await this.axios.get<Product[]>(`/products`);
+        return res.data.map(p => Product.parse(p));
+    };
 
-}
-
-export function httpBackend(url: string) {
-    const backend = new HTTPShopBackend(url);
-    return {
-        cart: backend,
-        productCatalog: backend,
-        orders: backend,
-    }
 }
