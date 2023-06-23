@@ -35,7 +35,7 @@ export default defineConfig({
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
         actionTimeout: 0,
         /* Base URL to use in actions like `await page.goto('/')`. */
-        baseURL: 'http://127.0.0.1:3000',
+        baseURL: 'http://localhost:3000',
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
@@ -52,7 +52,7 @@ export default defineConfig({
     webServer: [
         {
             command: 'cd ../client && yarn dev',
-            url: 'http://127.0.0.1:3000',
+            url: 'http://localhost:3000',
             reuseExistingServer: !process.env.CI,
             timeout: 9_000,
             stdout: 'pipe',
@@ -60,7 +60,7 @@ export default defineConfig({
         },
         {
             command: 'cd ../server && yarn dev',
-            url: 'http://127.0.0.1:8080/products',
+            url: 'http://localhost:8080/products',
             reuseExistingServer: !process.env.CI,
             timeout: 9_000,
             stdout: 'pipe',
