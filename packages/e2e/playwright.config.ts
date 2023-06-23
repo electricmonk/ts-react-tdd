@@ -1,12 +1,6 @@
 import {defineConfig, devices} from '@playwright/test';
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
-
-/**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
@@ -52,17 +46,17 @@ export default defineConfig({
     webServer: [
         {
             command: 'cd ../client && yarn dev',
-            url: 'http://localhost:3000',
+            // url: 'http://localhost:3000',
             reuseExistingServer: !process.env.CI,
-            timeout: 9_000,
+            // timeout: 9_000,
             stdout: 'pipe',
             stderr: 'pipe',
         },
         {
             command: 'cd ../server && yarn dev',
-            url: 'http://localhost:8080/products',
+            // url: 'http://localhost:8080/products',
             reuseExistingServer: !process.env.CI,
-            timeout: 9_000,
+            // timeout: 9_000,
             stdout: 'pipe',
             stderr: 'pipe',
         },
