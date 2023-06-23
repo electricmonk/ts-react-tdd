@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "dev": "yarn workspaces foreach -piv -j unlimited run dev",
-    "serve:ci": "yarn workspaces foreach -piv -j unlimited run serve:ci",
     "test": "yarn workspaces foreach -piv -j unlimited run test",
     "test:ci": "yarn workspaces foreach -piv -j unlimited run test"
   },
@@ -14,9 +13,9 @@
   "devDependencies": {
     "@types/cookie-parser": "^1.4.3",
     "cookie-parser": "^1.4.6",
-    "jsdom": "^21.1.0"
+    "jsdom": "^21.1.2"
   },
   "dependencies": {
-    "winston": "^3.8.1"
+    "winston": "^3.9.0"
   }
 }
