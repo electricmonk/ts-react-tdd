@@ -1,7 +1,6 @@
 import {fireEvent, render, within} from "@testing-library/react";
 import {InMemoryOrderRepository, InMemoryProductRepository} from "@ts-react-tdd/server/src/adapters/fakes";
 import {createServerLogic} from "@ts-react-tdd/server/src/server";
-import {ProductTemplate} from "@ts-react-tdd/server/src/types";
 import {Express} from 'express';
 import {AddressInfo} from 'net';
 import {QueryClient, QueryClientProvider} from "react-query";
@@ -16,9 +15,14 @@ type Driver = ReturnType<typeof render> & {
   home: () => Promise<void>;
 }
 
-export async function makeApp(products: ProductTemplate[] = []) {
-  const productRepo = new InMemoryProductRepository(products);
-  const orderRepo = new InMemoryOrderRepository();
+type AppContext = {
+  productRepo?: InMemoryProductRepository,
+  orderRepo?: InMemoryOrderRepository
+};
+
+export async function makeApp({
+  productRepo = new InMemoryProductRepository(),
+  orderRepo = new InMemoryOrderRepository()}: AppContext) {
   const logic = createServerLogic(productRepo, orderRepo);
   const queryClient = new QueryClient();
 

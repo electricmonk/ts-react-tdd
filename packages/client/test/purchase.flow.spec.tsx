@@ -1,10 +1,13 @@
 import { aProduct } from "@ts-react-tdd/server/src/builders";
 import { makeApp } from "../src/adapters/harness";
+import {InMemoryProductRepository} from "@ts-react-tdd/server/src/adapters/fakes";
 
 test("a user can purchase a product, see the confirmation page and see their order summary, after which the cart is reset", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
-    const { runInHarness, orderRepo } = await makeApp([moogOne]);
+    const { runInHarness, orderRepo } = await makeApp({
+        productRepo: new InMemoryProductRepository([moogOne]),
+    });
 
     await runInHarness(async (app) => {
       await app.findByText("0 items in cart");
