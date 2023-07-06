@@ -43,23 +43,5 @@ export default defineConfig({
         },
 
     ],
-    webServer: [
-        {
-            command: 'cd ../client && yarn dev',
-            // url: 'http://localhost:3000',
-            reuseExistingServer: !process.env.CI,
-            // timeout: 9_000,
-            stdout: 'pipe',
-            stderr: 'pipe',
-        },
-        {
-            command: 'cd ../server && yarn dev',
-            // url: 'http://localhost:8080/products',
-            reuseExistingServer: !process.env.CI,
-            // timeout: 9_000,
-            stdout: 'pipe',
-            stderr: 'pipe',
-        },
-    ],
 
 });
