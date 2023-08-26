@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom"],
+    "lib": ["dom", "esnext", "esnext.disposable"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -14,6 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noUnusedLocals": true,
+    "explicitResourceManagement": true,
 
     "jsx": "react-jsx"
   },
