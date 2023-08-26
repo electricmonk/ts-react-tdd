@@ -1,4 +1,4 @@
-import {fireEvent, render, within} from "@testing-library/react";
+import {render, within} from "@testing-library/react";
 import {InMemoryOrderRepository, InMemoryProductRepository} from "@ts-react-tdd/server/src/adapters/fakes";
 import {createServerLogic} from "@ts-react-tdd/server/src/server";
 import {Express} from 'express';
