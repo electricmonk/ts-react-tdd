@@ -7,6 +7,7 @@ import {QueryClient, QueryClientProvider} from "react-query";
 import {MemoryRouter} from "react-router-dom";
 import {App} from "../components/App";
 import {IOContextProvider} from "./context";
+import userEvent from "@testing-library/user-event";
 
 type Driver = ReturnType<typeof render> & {
   addProductToCart: (title: string) => Promise<void>;
@@ -34,19 +35,19 @@ export async function makeApp({
     const addProductToCart = async (title: string) => {
       const product = await app.findByLabelText(title)
       const add = within(product).getByText("Add");
-      fireEvent.click(add);
+      await userEvent.click(add);
     }
 
     const viewCart = async () => {
-      fireEvent.click(await app.findByText("View cart"));
+      await userEvent.click(await app.findByText("View cart"));
     }
 
     const checkout = async () => {
-      fireEvent.click(app.getByText("Checkout"));
+      await userEvent.click(app.getByText("Checkout"));
     }
 
     const home = async () => {
-      fireEvent.click(app.getByText("Home"));
+      await userEvent.click(app.getByText("Home"));
     }
 
     const driver = {
