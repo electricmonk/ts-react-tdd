@@ -13,10 +13,10 @@ export default defineConfig({
         include: ['./test/*.spec.ts', './test/*.spec.tsx'],
     },
     plugins: [
-        // createHtmlPlugin({
-        //     entry: 'src/index.tsx',
-        //     template: "./index.html",
-        // }),
+        createHtmlPlugin({
+            entry: 'src/index.tsx',
+            template: "./index.html",
+        }),
         react({
             babel: {
                 "plugins": ["@babel/plugin-proposal-explicit-resource-management"]
