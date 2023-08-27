@@ -1,38 +1,37 @@
-import { aProduct } from "@ts-react-tdd/server/src/builders";
-import { makeApp } from "../src/adapters/harness";
+import {aProduct} from "@ts-react-tdd/server/src/builders";
+import {makeApp} from "../src/adapters/harness";
 import {InMemoryProductRepository} from "@ts-react-tdd/server/src/adapters/fakes";
 
 test("a user can purchase a product, see the confirmation page and see their order summary, after which the cart is reset", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
-    const { runInHarness, orderRepo } = await makeApp({
+    using harness = await makeApp({
         productRepo: new InMemoryProductRepository([moogOne]),
     });
+    const {driver, orderRepo} = harness;
 
-    await runInHarness(async (app) => {
-      await app.findByText("0 items in cart");
+    await driver.findByText("0 items in cart");
 
-      await app.addProductToCart(moogOne.title);
-      await app.findByText("1 items in cart");
-  
-      await app.viewCart();
-      expect(await app.findByText(moogOne.title)).toBeTruthy();
+    await driver.addProductToCart(moogOne.title);
+    await driver.findByText("1 items in cart");
 
-      await app.checkout();
-      expect(await app.findByText("Thank You")).toBeTruthy();
-      expect(await app.findByText(moogOne.title)).toBeTruthy();
+    await driver.viewCart();
+    expect(await driver.findByText(moogOne.title)).toBeTruthy();
 
-      expect(orderRepo.orders).toContainEqual(expect.objectContaining({
-          items: expect.arrayContaining([
+    await driver.checkout();
+    expect(await driver.findByText("Thank You")).toBeTruthy();
+    expect(await driver.findByText(moogOne.title)).toBeTruthy();
+
+    expect(orderRepo.orders).toContainEqual(expect.objectContaining({
+        items: expect.arrayContaining([
             expect.objectContaining({
                 name: moogOne.title,
             })
-          ])
-      }));
+        ])
+    }));
 
-      await app.home();
-      await app.findByText("0 items in cart");
-  
-    });
+    await driver.home();
+    await driver.findByText("0 items in cart");
+
 
 })

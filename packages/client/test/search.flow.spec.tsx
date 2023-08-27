@@ -8,17 +8,16 @@ test("Product search is case-insensitive", async () => {
     const moogOne = aProduct({title: "Moog One"});
     const minimoog = aProduct({title: "Minimoog"});
     const ob8x = aProduct({title: "OB 8x"});
-    const {runInHarness} = await makeApp({
+    using harness = await makeApp({
         productRepo: new InMemoryProductRepository([moogOne, minimoog, ob8x]),
     });
+    const {driver} = harness;
 
-    await runInHarness(async (app) => {
-        await userEvent.type(app.getByPlaceholderText('Search products'), 'moog');
-        await userEvent.click(app.getByLabelText('Search'));
+    await userEvent.type(driver.getByPlaceholderText('Search products'), 'moog');
+    await userEvent.click(driver.getByLabelText('Search'));
 
-        expect(app.queryByText(moogOne.title)).toBeInTheDocument();
-        expect(app.queryByText(minimoog.title)).toBeInTheDocument();
-        expect(app.queryByText(ob8x.title)).not.toBeInTheDocument();
-    });
+    expect(driver.queryByText(moogOne.title)).toBeInTheDocument();
+    expect(driver.queryByText(minimoog.title)).toBeInTheDocument();
+    expect(driver.queryByText(ob8x.title)).not.toBeInTheDocument();
 
 })

@@ -18,6 +18,9 @@ export default defineConfig({
             template: "./index.html",
         }),
         react({
+            babel: {
+                "plugins": ["@babel/plugin-proposal-explicit-resource-management"]
+            },
             include: '**/*.tsx',
         }),
     ],
