@@ -12,9 +12,8 @@ async function startServer() {
   const productRepo = new MongoDBProductRepository(db);
   const orderRepo = new MongoDBOrderRepository(db);
 
-  const app = createServerLogic(productRepo, orderRepo);
-  const address = await app.listen({port: 8080, host: "127.0.0.1"});
-  console.log(`server listening on ${address}`)
+  const app = createServerLogic(productRepo, orderRepo, {logger: true});
+  await app.listen({port: 8080});
 }
 
 void startServer();
