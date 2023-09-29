@@ -1,14 +1,11 @@
 import {render, within} from "@testing-library/react";
 import {InMemoryOrderRepository, InMemoryProductRepository} from "@ts-react-tdd/server/src/adapters/fakes";
 import {createServerLogic} from "@ts-react-tdd/server/src/server";
-import {Express} from 'express';
-import {AddressInfo} from 'net';
 import {QueryClient, QueryClientProvider} from "react-query";
 import {MemoryRouter} from "react-router-dom";
 import {App} from "../components/App";
 import {IOContextProvider} from "./context";
 import userEvent from "@testing-library/user-event";
-import {FastifyInstance} from "fastify";
 
 type AppContext = {
     productRepo?: InMemoryProductRepository,

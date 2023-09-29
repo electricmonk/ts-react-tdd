@@ -1,5 +1,4 @@
-import { defineConfig } from 'vitest/config'
-import { createHtmlPlugin } from 'vite-plugin-html';
+import {defineConfig} from 'vitest/config'
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -12,18 +11,12 @@ export default defineConfig({
         setupFiles: ["./setupTests.ts"],
         include: ['./test/*.spec.ts', './test/*.spec.tsx'],
     },
-    plugins: [
-        createHtmlPlugin({
-            entry: 'src/index.tsx',
-            template: "./index.html",
-        }),
-        react({
-            babel: {
-                "plugins": ["@babel/plugin-proposal-explicit-resource-management"]
-            },
-            include: '**/*.tsx',
-        }),
-    ],
+    plugins: [react({
+        babel: {
+            "plugins": ["@babel/plugin-proposal-explicit-resource-management"]
+        },
+        include: '**/*.tsx',
+    })],
     server: {
         port: 3000,
         host: '0.0.0.0'
