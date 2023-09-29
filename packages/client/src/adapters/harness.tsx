@@ -8,6 +8,7 @@ import {MemoryRouter} from "react-router-dom";
 import {App} from "../components/App";
 import {IOContextProvider} from "./context";
 import userEvent from "@testing-library/user-event";
+import {FastifyInstance} from "fastify";
 
 type AppContext = {
     productRepo?: InMemoryProductRepository,
@@ -18,10 +19,10 @@ export async function makeApp({
                                   productRepo = new InMemoryProductRepository(),
                                   orderRepo = new InMemoryOrderRepository()
                               }: AppContext) {
-    const logic = createServerLogic(productRepo, orderRepo);
+    const fastify = createServerLogic(productRepo, orderRepo);
     const queryClient = new QueryClient();
 
-    const {baseUrl, close} = await startServer(logic);
+    const baseUrl = await fastify.listen({host: '127.0.0.1', port: 0});
 
     const app = render(<MemoryRouter><IOContextProvider backendUrl={baseUrl}> <QueryClientProvider client={queryClient}><App/></QueryClientProvider></IOContextProvider>
     </MemoryRouter>);
@@ -57,19 +58,8 @@ export async function makeApp({
         productRepo,
         orderRepo,
         driver,
-        [Symbol.dispose]: close,
+        [Symbol.dispose]: () => fastify.close(),
     };
 }
 
-function startServer(app: Express) {
-    return new Promise<{ close: VoidFunction, baseUrl: string }>(resolve => {
-        const server = app.listen(0, () => {
-            const port = (server.address() as AddressInfo).port;
-            resolve({
-                close: server.close.bind(server),
-                baseUrl: `http://localhost:${port}`,
-            })
-        });
-    });
-}
 
