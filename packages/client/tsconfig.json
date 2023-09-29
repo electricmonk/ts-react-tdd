@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2020",
     "lib": ["dom", "esnext", "esnext.disposable"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -14,7 +14,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noUnusedLocals": true,
-    "explicitResourceManagement": true,
 
     "jsx": "react-jsx"
   },

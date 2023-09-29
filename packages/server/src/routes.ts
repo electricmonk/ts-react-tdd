@@ -1,5 +1,5 @@
-import express from "express";
 import {LineItem, Order, Product, ProductTemplate} from "./types";
+import {FastifyInstance, FastifyRequest} from "fastify";
 
 
 type Cart = {
@@ -19,22 +19,23 @@ export interface OrderRepository {
 
 }
 
-export function createRoutes(productRepo: ProductRepository, orderRepo: OrderRepository) {
+type CartId = {Params: {cartId: string}};
+type OrderId = {Params: {orderId: string}};
+
+export const createRoutes = (productRepo: ProductRepository, orderRepo: OrderRepository) => (fastify: FastifyInstance, opts: any, done: () => void) => {
     const sessions: Record<string, Cart> = {};
 
-    const router = express.Router();
-
-    router.get("/cart/:cartId", (req, res) => {
+    fastify.get("/cart/:cartId", (req: FastifyRequest<CartId>, res) => {
         const {cartId} = req.params;
-        res.json(sessions[cartId]);
+        res.send(sessions[cartId]);
     });
 
-    router.get("/cart/:cartId/count", (req, res) => {
+    fastify.get("/cart/:cartId/count", (req: FastifyRequest<CartId>, res) => {
         const {cartId} = req.params;
-        res.json(sessions[cartId]?.items.length || 0);
+        res.send(sessions[cartId]?.items.length || 0);
     });
 
-    router.post("/cart/:cartId", async (req, res) => {
+    fastify.post("/cart/:cartId", async (req: FastifyRequest<CartId & {Body: {productId: string}}> , res) => {
         const {cartId} = req.params;
         const {productId} = req.body;
         sessions[cartId] = sessions[cartId] || {id: cartId, items: []};
@@ -42,13 +43,13 @@ export function createRoutes(productRepo: ProductRepository, orderRepo: OrderRep
 
         if (product) {
             sessions[cartId].items.push(({productId, name: product.title, price: product.price}))
-            res.sendStatus(201);    
+            res.status(201).send();
         } else {
-            res.sendStatus(404);    
+            res.status(404).send();
         }
     });
 
-    router.post("/checkout/:cartId", async (req, res) => {
+    fastify.post("/checkout/:cartId", async (req: FastifyRequest<CartId>, res) => {
         const {cartId} = req.params;
         const cart = sessions[cartId];
         if (!cart) {
@@ -60,11 +61,11 @@ export function createRoutes(productRepo: ProductRepository, orderRepo: OrderRep
         }
     });
 
-    router.get("/order/:orderId", async (req, res) => {
+    fastify.get("/order/:orderId", async (req: FastifyRequest<OrderId>, res) => {
         const {orderId} = req.params;
         const order = await orderRepo.findById(orderId);
         if (order) {
-            res.json(order);
+            res.send(order);
         } else {
             res.status(404).send(`Order with id ${orderId} was not found`);
         }
@@ -72,13 +73,14 @@ export function createRoutes(productRepo: ProductRepository, orderRepo: OrderRep
 
 
 //TODO remove
-    router.post("/products", async (req, res) => {
+    fastify.post("/products", async (req, res) => {
         const product = await productRepo.create(ProductTemplate.parse(req.body));
         res.status(201).send(product);
     })
 
-    router.get("/products", async (_, res) => {
+    fastify.get("/products", async (_, res) => {
         res.send(await productRepo.findAll());
     })
-    return router;
+
+    done();
 }
