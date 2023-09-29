@@ -11,16 +11,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/plugin-proposal-explicit-resource-management": "^7.22.6",
+    "@babel/plugin-proposal-explicit-resource-management": "^7.23.0",
     "@nirelko/jest-environment-jsdom": "^29.6.7",
-    "@testing-library/dom": "^9.3.1",
+    "@testing-library/dom": "^9.3.3",
     "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.4.3",
-    "@types/js-cookie": "^3.0.3",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7",
-    "@vitejs/plugin-react": "^4.0.4",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/js-cookie": "^3.0.4",
+    "@types/react": "^18.2.23",
+    "@types/react-dom": "^18.2.8",
+    "@vitejs/plugin-react": "^4.1.0",
     "fastify": "^4.23.2",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
@@ -29,11 +29,11 @@
   },
   "dependencies": {
     "@ts-react-tdd/server": "1.0.0",
-    "axios": "^0.27.2",
+    "axios": "^1.5.1",
     "nanoid": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
-    "react-router-dom": "^6.15.0"
+    "react-router-dom": "^6.16.0"
   }
 }
