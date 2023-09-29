@@ -27,6 +27,10 @@ We chose typescript over other solutions (such as ELM, ReasonML or ClojureScript
 Since the type system is compile-time only, we need some way to assert that the data we think we're parsing from Mongo / HTTP 
 actually complies to the schema we defined. Zod is a good TypeScript-first solution for schema management.
 
+#### Fastify
+
+Express is dated, its latest release in October 2022 (as of September 2023) and its API is not Typescript-friendly. Fastify supports Typescript out of the box, with Zod support for schema definition supported by a plugin.
+
 #### React
 
 #### Vite
