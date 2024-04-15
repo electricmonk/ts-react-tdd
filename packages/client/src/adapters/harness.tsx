@@ -6,16 +6,17 @@ import {MemoryRouter} from "react-router-dom";
 import {App} from "../components/App";
 import {IOContextProvider} from "./context";
 import userEvent from "@testing-library/user-event";
+import {ProductTemplate} from "@ts-react-tdd/server/src/types";
 
 type AppContext = {
-    productRepo?: InMemoryProductRepository,
-    orderRepo?: InMemoryOrderRepository
+    products: ProductTemplate[]
 };
 
 export async function makeApp({
-                                  productRepo = new InMemoryProductRepository(),
-                                  orderRepo = new InMemoryOrderRepository()
+                                  products = [],
                               }: AppContext) {
+    const productRepo = new InMemoryProductRepository(products);
+    const orderRepo = new InMemoryOrderRepository();
     const fastify = createServerLogic(productRepo, orderRepo);
     const queryClient = new QueryClient();
 
