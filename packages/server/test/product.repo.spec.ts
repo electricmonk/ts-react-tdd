@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { InMemoryProductRepository } from "../src/adapters/fake";
-import { MongoDBProductRepository } from "../src/adapters/product.repo";
+import {MongoDBProductRepository, ProductRepository} from "../src/adapters/product.repo";
 import { aProduct } from "../src/builders";
 
 const adapters = [
