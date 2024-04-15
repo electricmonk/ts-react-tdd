@@ -1,6 +1,5 @@
 import {render, within} from "@testing-library/react";
-import {InMemoryOrderRepository, InMemoryProductRepository} from "@ts-react-tdd/server/src/adapters/fakes";
-import {createServerLogic} from "@ts-react-tdd/server/src/server";
+import {createTestingModule} from "@ts-react-tdd/server/src/server";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {MemoryRouter} from "react-router-dom";
 import {App} from "../components/App";
@@ -15,14 +14,14 @@ type AppContext = {
 export async function makeApp({
                                   products = [],
                               }: AppContext) {
-    const productRepo = new InMemoryProductRepository(products);
-    const orderRepo = new InMemoryOrderRepository();
-    const fastify = createServerLogic(productRepo, orderRepo);
+
+    const {nest, orderRepo, productRepo} = await createTestingModule(products);
+
     const queryClient = new QueryClient();
 
-    const baseUrl = await fastify.listen({host: '127.0.0.1', port: 0});
+    const server = await nest.listen(0, "127.0.0.1");
 
-    const app = render(<MemoryRouter><IOContextProvider backendUrl={baseUrl}> <QueryClientProvider client={queryClient}><App/></QueryClientProvider></IOContextProvider>
+    const app = render(<MemoryRouter><IOContextProvider backendUrl={await nest.getUrl()}> <QueryClientProvider client={queryClient}><App/></QueryClientProvider></IOContextProvider>
     </MemoryRouter>);
 
     const addProductToCart = async (title: string) => {
@@ -56,7 +55,7 @@ export async function makeApp({
         productRepo,
         orderRepo,
         driver,
-        [Symbol.dispose]: () => fastify.close(),
+        [Symbol.dispose]: () => server.close(),
     };
 }
 

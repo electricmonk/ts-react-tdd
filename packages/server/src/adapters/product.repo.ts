@@ -1,8 +1,10 @@
 import { Collection, Db, ObjectId, WithId } from "mongodb";
 import { Product, ProductTemplate } from "../types";
+import {Injectable} from "@nestjs/common";
 
 const docToProduct = ({_id, ...rest}: WithId<ProductTemplate>) => Product.parse({id: _id.toString(), ...rest});
 
+@Injectable()
 export class MongoDBProductRepository {
     private products: Collection<ProductTemplate>;
 

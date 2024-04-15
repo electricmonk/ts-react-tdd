@@ -1,14 +1,10 @@
-import {LineItem, ProductTemplate} from "./types";
+import {Cart, ProductTemplate} from "./types";
 import {FastifyInstance} from "fastify";
 import {serializerCompiler, validatorCompiler, ZodTypeProvider} from "fastify-type-provider-zod";
 import {z} from "zod";
 import { ProductRepository } from "./adapters/product.repo";
 import { OrderRepository } from "./adapters/order.repo";
 
-type Cart = {
-    id: string;
-    items: LineItem[];
-}
 
 const CartIdSchema = z.object({
     cartId: z.string()

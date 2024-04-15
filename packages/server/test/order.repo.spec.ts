@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { nanoid } from "nanoid";
-import { InMemoryOrderRepository } from "../src/adapters/fakes";
+import { InMemoryOrderRepository } from "../src/adapters/fake";
 import { MongoDBOrderRepository } from "../src/adapters/order.repo";
 
 

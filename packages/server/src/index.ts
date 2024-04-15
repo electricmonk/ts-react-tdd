@@ -1,7 +1,8 @@
 import { MongoClient } from "mongodb";
 import { MongoDBOrderRepository } from "./adapters/order.repo";
 import { MongoDBProductRepository } from "./adapters/product.repo";
-import { createServerLogic } from "./server";
+import {NestFactory} from "@nestjs/core";
+import {AppModule} from "./app.module";
 
 async function startServer() {
   const mongo = await new MongoClient(
@@ -12,8 +13,9 @@ async function startServer() {
   const productRepo = new MongoDBProductRepository(db);
   const orderRepo = new MongoDBOrderRepository(db);
 
-  const app = createServerLogic(productRepo, orderRepo, {logger: true});
-  await app.listen({port: 8080});
+  const app = await NestFactory.create(AppModule.register(productRepo, orderRepo))
+  app.enableCors({origin: "*"});
+  await app.listen(8080);
 }
 
 void startServer();
