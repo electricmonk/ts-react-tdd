@@ -24,3 +24,5 @@ export class MongoDBOrderRepository {
             .then(doc => doc ? docToOrder(doc) : null)
     }
 }
+
+export type OrderRepository = Omit<MongoDBOrderRepository, "orders">;

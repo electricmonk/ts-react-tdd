@@ -1,26 +1,13 @@
-import {LineItem, Order, Product, ProductTemplate} from "./types";
+import {LineItem, ProductTemplate} from "./types";
 import {FastifyInstance} from "fastify";
 import {serializerCompiler, validatorCompiler, ZodTypeProvider} from "fastify-type-provider-zod";
 import {z} from "zod";
+import { ProductRepository } from "./adapters/product.repo";
+import { OrderRepository } from "./adapters/order.repo";
 
 type Cart = {
     id: string;
     items: LineItem[];
-}
-
-export interface ProductRepository {
-    findById(productId: Product["id"]): Promise<Product | undefined>;
-
-    create(template: Omit<Product, "id">): Promise<Product>;
-
-    findAll(): Promise<Product[]>;
-}
-
-export interface OrderRepository {
-    create(order: Omit<Order, "id">): Promise<Order>;
-
-    findById(orderId: string): Promise<Order | null>;
-
 }
 
 const CartIdSchema = z.object({

@@ -1,7 +1,9 @@
 import { nanoid } from "nanoid";
 import { Order, Product, ProductTemplate } from "../types";
+import {ProductRepository} from "./product.repo";
+import {OrderRepository} from "./order.repo";
 
-export class InMemoryProductRepository {
+export class InMemoryProductRepository implements ProductRepository {
   private products: Product[] = []
 
   constructor(products: ProductTemplate[] = []) {
@@ -22,7 +24,7 @@ export class InMemoryProductRepository {
   }
 }
 
-export class InMemoryOrderRepository {
+export class InMemoryOrderRepository implements OrderRepository {
   orders: Order[] = [];
 
   async create(order: Omit<Order, "id">): Promise<Order> {

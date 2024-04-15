@@ -26,17 +26,10 @@ export class MongoDBProductRepository {
             .toArray();
     }
 
-    async findByIds(productIds: string[]): Promise<Product[]> {
-        return this.products.find({_id: {$in: productIds.map(id => new ObjectId(id))}})
-            .map(docToProduct)
-            .toArray();
-    }
-
     async findById(productId: string): Promise<Product | undefined> {
         return this.products.findOne({_id: {$eq: new ObjectId(productId)}})
             .then(doc => doc ? docToProduct(doc) : undefined)
     }
 }
 
-
-  
+export type ProductRepository = Omit<MongoDBProductRepository, "products">;
