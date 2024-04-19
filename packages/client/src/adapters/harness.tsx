@@ -1,5 +1,5 @@
 import {render, within} from "@testing-library/react";
-import {createTestingModule} from "packages/server/src/server.testkit";
+import {createTestingModule} from "@ts-react-tdd/server/src/server.testkit";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {MemoryRouter} from "react-router-dom";
 import {App} from "../components/App";
