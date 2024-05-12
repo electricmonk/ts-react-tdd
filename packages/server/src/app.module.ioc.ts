@@ -6,10 +6,10 @@ import {CART_REPO, ORDER_REPO, PRODUCT_REPO} from "./adapters";
 import {MemoryCartRepository} from "./adapters/cart.repo";
 
 @Module({})
-export class AppModule {
+export class AppModuleInversionOfControl {
     static register(productRepo: ProductRepository, orderRepo: OrderRepository): DynamicModule {
         return {
-            module: AppModule,
+            module: AppModuleInversionOfControl,
             providers: [
                 {
                     provide: PRODUCT_REPO,

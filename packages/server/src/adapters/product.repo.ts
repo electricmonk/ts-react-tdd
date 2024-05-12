@@ -1,6 +1,6 @@
 import { Collection, Db, ObjectId, WithId } from "mongodb";
 import { Product, ProductTemplate } from "../types";
-import {Injectable} from "@nestjs/common";
+import {Inject, Injectable} from "@nestjs/common";
 
 const docToProduct = ({_id, ...rest}: WithId<ProductTemplate>) => Product.parse({id: _id.toString(), ...rest});
 
@@ -8,7 +8,7 @@ const docToProduct = ({_id, ...rest}: WithId<ProductTemplate>) => Product.parse(
 export class MongoDBProductRepository {
     private products: Collection<ProductTemplate>;
 
-    constructor(db: Db) {
+    constructor(@Inject("storeDB") db: Db) {
         this.products = db.collection("products");
     }
 

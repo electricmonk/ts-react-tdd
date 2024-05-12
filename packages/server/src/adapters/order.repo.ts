@@ -1,6 +1,6 @@
 import { Collection, Db, ObjectId, WithId } from "mongodb";
 import { Order } from "../types";
-import {Injectable} from "@nestjs/common";
+import {Inject, Injectable} from "@nestjs/common";
 
 type MongoOrder = Omit<Order, "id">;
 const docToOrder = ({_id, ...rest}: WithId<MongoOrder>) => Order.parse({id: _id.toString(), ...rest});
@@ -9,7 +9,7 @@ const docToOrder = ({_id, ...rest}: WithId<MongoOrder>) => Order.parse({id: _id.
 export class MongoDBOrderRepository {
     private orders: Collection<MongoOrder>;
 
-    constructor(db: Db) {
+    constructor(@Inject("storeDB") db: Db) {
         this.orders = db.collection("orders");
     }
 
