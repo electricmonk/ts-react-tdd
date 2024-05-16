@@ -1,32 +1,10 @@
-import {
-    ArgumentMetadata,
-    BadRequestException,
-    Body,
-    Controller,
-    Get, Inject,
-    Param,
-    PipeTransform,
-    Post,
-    UsePipes
-} from '@nestjs/common';
-import { ZodSchema} from 'zod';
-import { ProductRepository } from './adapters/product.repo';
+import {BadRequestException, Body, Controller, Get, Inject, Param, Post, UsePipes} from '@nestjs/common';
+import {ProductRepository} from './adapters/product.repo';
 import {ProductTemplate} from "./types";
 import {OrderRepository} from "./adapters/order.repo";
 import {CartRepository} from "./adapters/cart.repo";
 import {CART_REPO, ORDER_REPO, PRODUCT_REPO} from "./adapters";
-
-export class ZodValidationPipe implements PipeTransform {
-    constructor(private schema: ZodSchema) {}
-
-    transform(value: unknown, metadata: ArgumentMetadata) {
-        try {
-            return this.schema.parse(value);
-        } catch (error) {
-            throw new BadRequestException(`failed parsing value ${value} into type ${metadata.type} with ${error}`);
-        }
-    }
-}
+import {ZodValidationPipe} from "./zodValidationPipe";
 
 @Controller("/products")
 export class ProductController {
