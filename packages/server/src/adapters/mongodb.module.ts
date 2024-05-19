@@ -40,4 +40,8 @@ export class MongoDBModule {
             exports: [PRODUCT_REPO, ORDER_REPO, CART_REPO]
         }
     }
+
+    static default() {
+        return this.forRoot({uri: `mongodb://root:password@127.0.0.1`, dbName: "storeDB"});
+    }
 }

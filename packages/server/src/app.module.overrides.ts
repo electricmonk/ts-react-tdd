@@ -3,7 +3,7 @@ import {CartController, CheckoutController, OrderController, ProductController} 
 import {MongoDBModule} from "./adapters/mongodb.module";
 
 @Module({
-    imports: [MongoDBModule.forRoot(`mongodb://root:password@127.0.0.1`)],
+    imports: [MongoDBModule.default()],
     controllers: [CartController, ProductController, OrderController, CheckoutController]
 })
 export class AppModuleOverrides {
