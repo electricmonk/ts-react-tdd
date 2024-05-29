@@ -12,13 +12,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@nestjs/testing": "^10.3.7",
-    "@types/supertest": "^6.0.2",
-    "supertest": "^7.0.0",
-    "@types/morgan": "^1.9.5",
     "@faker-js/faker": "^8.4.1",
+    "@nestjs/testing": "^10.3.7",
+    "@types/morgan": "^1.9.5",
     "@types/node": "^20.12.12",
+    "@types/supertest": "^6.0.2",
     "nodemon": "^3.1.1",
+    "supertest": "^7.0.0",
     "vitest": "^1.6.0"
   },
   "dependencies": {
