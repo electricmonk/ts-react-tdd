@@ -12,7 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/plugin-proposal-explicit-resource-management": "^7.24.6",
-    "@nirelko/jest-environment-jsdom": "^29.6.7",
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.3.1",

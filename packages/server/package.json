@@ -6,18 +6,16 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "serve:ci": "ts-node src/index.ts",
-    "test": "jest"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@types/jest": "^28.1.8",
     "@types/node": "^20.12.12",
-    "jest": "^28.1.3",
     "nodemon": "^3.1.1",
-    "ts-jest": "^28.0.8"
+    "vitest": "^1.6.0"
   },
   "dependencies": {
     "@fastify/cors": "^8.5.0",
