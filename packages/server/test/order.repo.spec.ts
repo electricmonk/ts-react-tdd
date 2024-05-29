@@ -2,27 +2,24 @@ import { MongoClient } from "mongodb";
 import { nanoid } from "nanoid";
 import { InMemoryOrderRepository } from "../src/adapters/fakes";
 import { MongoDBOrderRepository } from "../src/adapters/order.repo";
-import { OrderRepository } from "../src/routes";
 
 
-type Adapter = [string, () => Promise<{repo: OrderRepository, close: () => any}>]
-
-const adapters: Adapter[] = [
-    ["mongodb", async () => {
+const adapters = [
+    {name: "mongodb", makeRepo: async () => {
         const mongo = await new MongoClient(`mongodb://root:password@127.0.0.1?retryWrites=true&writeConcern=majority`).connect();
         const repo = new MongoDBOrderRepository(mongo.db());
         return {
             repo,
             close: mongo.close.bind(mongo)
         }
-    }],
-    ["memory", async () => ({
+    }},
+    {name:"memory", makeRepo: async () => ({
         repo: new InMemoryOrderRepository(),
         close: () => {},
-    })]
+    })}
 ]
 
-describe.each(adapters)('the %s order repository', (_, makeRepo) => {
+describe.each(adapters)('the $name order repository', ({makeRepo}) => {
 
     it('finds product by id', async () => {
         const { repo, close } = await makeRepo();

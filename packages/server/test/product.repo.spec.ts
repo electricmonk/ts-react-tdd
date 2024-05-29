@@ -2,26 +2,23 @@ import { MongoClient } from "mongodb";
 import { InMemoryProductRepository } from "../src/adapters/fakes";
 import { MongoDBProductRepository } from "../src/adapters/product.repo";
 import { aProduct } from "../src/builders";
-import { ProductRepository } from "../src/routes";
 
-type Adapter = [string, () => Promise<{repo: ProductRepository, close: () => any}>]
-
-const adapters: Adapter[] = [
-    ["mongodb", async () => {
+const adapters = [
+    {name: "mongodb", makeRepo: async () => {
         const mongo = await new MongoClient(`mongodb://root:password@127.0.0.1?retryWrites=true&writeConcern=majority`).connect();
         const repo = new MongoDBProductRepository(mongo.db());
         return {
             repo,
             close: mongo.close.bind(mongo)
         }
-    }],
-    ["memory", async () => ({
+    }},
+    {name: "memory", makeRepo: async () => ({
         repo: new InMemoryProductRepository(),
         close: () => {},
-    })]
+    })}
 ]
 
-describe.each(adapters)('the %s product repository', (_, makeRepo) => {
+describe.each(adapters)('the $name product repository', ({makeRepo}) => {
 
     it('finds product by id', async () => {
         const { repo, close } = await makeRepo();
