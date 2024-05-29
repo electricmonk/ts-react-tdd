@@ -13,7 +13,7 @@
   "devDependencies": {
     "@types/cookie-parser": "^1.4.7",
     "cookie-parser": "^1.4.6",
-    "jsdom": "^21.1.2"
+    "jsdom": "^24.1.0"
   },
   "dependencies": {
     "winston": "^3.13.0"
