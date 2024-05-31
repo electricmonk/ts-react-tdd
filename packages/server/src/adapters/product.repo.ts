@@ -1,12 +1,14 @@
 import { Collection, Db, ObjectId, WithId } from "mongodb";
 import { Product, ProductTemplate } from "../types";
+import {Inject, Injectable} from "@nestjs/common";
 
 const docToProduct = ({_id, ...rest}: WithId<ProductTemplate>) => Product.parse({id: _id.toString(), ...rest});
 
+@Injectable()
 export class MongoDBProductRepository {
     private products: Collection<ProductTemplate>;
 
-    constructor(db: Db) {
+    constructor(@Inject("storeDB") db: Db) {
         this.products = db.collection("products");
     }
 
@@ -26,17 +28,10 @@ export class MongoDBProductRepository {
             .toArray();
     }
 
-    async findByIds(productIds: string[]): Promise<Product[]> {
-        return this.products.find({_id: {$in: productIds.map(id => new ObjectId(id))}})
-            .map(docToProduct)
-            .toArray();
-    }
-
     async findById(productId: string): Promise<Product | undefined> {
         return this.products.findOne({_id: {$eq: new ObjectId(productId)}})
             .then(doc => doc ? docToProduct(doc) : undefined)
     }
 }
 
-
-  
+export type ProductRepository = Omit<MongoDBProductRepository, "products">;

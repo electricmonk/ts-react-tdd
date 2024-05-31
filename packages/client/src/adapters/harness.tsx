@@ -1,27 +1,27 @@
 import {render, within} from "@testing-library/react";
-import {InMemoryOrderRepository, InMemoryProductRepository} from "@ts-react-tdd/server/src/adapters/fakes";
-import {createServerLogic} from "@ts-react-tdd/server/src/server";
+import {createTestingModule} from "@ts-react-tdd/server/src/server.testkit";
 import {QueryClient, QueryClientProvider} from "react-query";
 import {MemoryRouter} from "react-router-dom";
 import {App} from "../components/App";
 import {IOContextProvider} from "./context";
 import userEvent from "@testing-library/user-event";
+import {ProductTemplate} from "@ts-react-tdd/server/src/types";
 
 type AppContext = {
-    productRepo?: InMemoryProductRepository,
-    orderRepo?: InMemoryOrderRepository
+    products: ProductTemplate[]
 };
 
 export async function makeApp({
-                                  productRepo = new InMemoryProductRepository(),
-                                  orderRepo = new InMemoryOrderRepository()
+                                  products = [],
                               }: AppContext) {
-    const fastify = createServerLogic(productRepo, orderRepo);
+
+    const {nest, orderRepo, productRepo} = await createTestingModule(products);
+
     const queryClient = new QueryClient();
 
-    const baseUrl = await fastify.listen({host: '127.0.0.1', port: 0});
+    const server = await nest.listen(0, "127.0.0.1");
 
-    const app = render(<MemoryRouter><IOContextProvider backendUrl={baseUrl}> <QueryClientProvider client={queryClient}><App/></QueryClientProvider></IOContextProvider>
+    const app = render(<MemoryRouter><IOContextProvider backendUrl={await nest.getUrl()}> <QueryClientProvider client={queryClient}><App/></QueryClientProvider></IOContextProvider>
     </MemoryRouter>);
 
     const addProductToCart = async (title: string) => {
@@ -55,7 +55,7 @@ export async function makeApp({
         productRepo,
         orderRepo,
         driver,
-        [Symbol.dispose]: () => fastify.close(),
+        [Symbol.dispose]: () => server.close(),
     };
 }
 

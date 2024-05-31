@@ -16,6 +16,7 @@
     "jsdom": "^24.1.0"
   },
   "dependencies": {
+    "@nestjs/config": "^3.2.2",
     "winston": "^3.13.0"
   }
 }
