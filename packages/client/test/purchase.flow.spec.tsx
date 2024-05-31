@@ -10,17 +10,17 @@ test("a user can purchase a product, see the confirmation page and see their ord
     });
     const {driver, orderRepo} = harness;
 
-    await driver.findByText("0 items in cart");
+    await driver.findByRole('paragraph', { name: /0 items in cart/i });
 
     await driver.addProductToCart(moogOne.title);
-    await driver.findByText("1 items in cart");
+    await driver.findByRole('paragraph', { name: /1 items in cart/i });
 
     await driver.viewCart();
-    expect(await driver.findByText(moogOne.title)).toBeTruthy();
+    expect(await driver.findByRole('listitem', { name: moogOne.title })).toBeTruthy();
 
     await driver.checkout();
-    expect(await driver.findByText("Thank You")).toBeTruthy();
-    expect(await driver.findByText(moogOne.title)).toBeTruthy();
+    expect(await driver.findByRole('heading', { name: /thank you/i })).toBeTruthy();
+    expect(await driver.findByRole('listitem', {name: moogOne.title})).toBeTruthy();
 
     expect(orderRepo.orders).toContainEqual(expect.objectContaining({
         items: expect.arrayContaining([
@@ -31,7 +31,5 @@ test("a user can purchase a product, see the confirmation page and see their ord
     }));
 
     await driver.home();
-    await driver.findByText("0 items in cart");
-
-
+    await driver.findByRole('paragraph', { name: /0 items in cart/i });
 })

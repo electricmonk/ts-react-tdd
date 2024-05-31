@@ -29,7 +29,7 @@ export const Cart: React.FC<CartProps> = ({id, onCheckout}) => {
 
     return <section>
         <ul>
-            {summary?.items.map(({productId, name}) => <li key={productId}>{name}</li>)}
+            {summary?.items.map(({productId, name}) => <li key={productId} aria-label={name}>{name}</li>)}
         </ul>
         <button aria-label="Checkout" role="button" onClick={checkoutAndViewOrder}>Checkout</button>
     </section>

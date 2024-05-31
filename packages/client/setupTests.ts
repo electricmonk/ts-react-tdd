@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom';
 import '@testing-library/react';
+import {configure} from "@testing-library/react";
 
-beforeAll(() => {
-    global.IS_REACT_ACT_ENVIRONMENT = false;
-});
+configure({throwSuggestions: true});

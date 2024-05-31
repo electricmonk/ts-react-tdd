@@ -13,11 +13,11 @@ test("Product search is case-insensitive", async () => {
     });
     const {driver} = harness;
 
-    await userEvent.type(driver.getByPlaceholderText('Search products'), 'moog');
-    await userEvent.click(driver.getByLabelText('Search'));
+    await userEvent.type(driver.getByRole('textbox', {name: 'free-text-search'}), 'moog');
+    await userEvent.click(driver.getByRole('button', { name: /search/i }));
 
-    expect(driver.queryByText(moogOne.title)).toBeInTheDocument();
-    expect(driver.queryByText(minimoog.title)).toBeInTheDocument();
-    expect(driver.queryByText(ob8x.title)).not.toBeInTheDocument();
+    expect(driver.queryByRole('heading', { name: moogOne.title })).toBeInTheDocument();
+    expect(driver.queryByRole('heading', { name: minimoog.title })).toBeInTheDocument();
+    expect(driver.queryByRole('heading', { name: ob8x.title })).not.toBeInTheDocument();
 
 })

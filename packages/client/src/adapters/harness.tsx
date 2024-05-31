@@ -26,20 +26,20 @@ export async function makeApp({
 
     const addProductToCart = async (title: string) => {
         const product = await app.findByLabelText(title)
-        const add = within(product).getByText("Add");
+        const add = within(product).getByRole('button', { name: /add to cart/i });
         await userEvent.click(add);
     }
 
     const viewCart = async () => {
-        await userEvent.click(await app.findByText("View cart"));
+        await userEvent.click(await app.findByRole('button', { name: /view cart/i }));
     }
 
     const checkout = async () => {
-        await userEvent.click(app.getByText("Checkout"));
+        await userEvent.click(app.getByRole('button', { name: /checkout/i }));
     }
 
     const home = async () => {
-        await userEvent.click(app.getByText("Home"));
+        await userEvent.click(app.getByRole('button', { name: /home/i }));
     }
 
     const driver = {

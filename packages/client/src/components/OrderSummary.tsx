@@ -19,7 +19,7 @@ export const OrderSummary: React.FC<{}> = () => {
         <h2>Thank You</h2>
         <span> {order?.id}</span>
         <ul>
-            {order?.items.map(({productId, name}) => <li key={productId}>{name}</li>)}
+            {order?.items.map(({productId, name}) => <li key={productId} aria-label={name}>{name}</li>)}
         </ul>
         <button aria-label="Home" role="button" onClick={() => navigate("/")}>Home</button>
 

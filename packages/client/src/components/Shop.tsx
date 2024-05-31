@@ -17,7 +17,7 @@ export const Shop: React.FC<ShopProps> = ({ cartId }) => {
         {fetched && (<p aria-label={`${itemCount} items in cart`}>{itemCount} items in cart</p>)}
         {fetched && !!itemCount && <button aria-label="View cart" role="button" onClick={viewCart}>View cart</button>}
         <section>
-            <input type="text" placeholder="Search products" value={freeTextSearch} onChange={(e) => setFreeTextSearch(e.target.value)}/>
+            <input type="text" aria-label="free-text-search" placeholder="Search products" value={freeTextSearch} onChange={(e) => setFreeTextSearch(e.target.value)}/>
             <button aria-label="Search">Search</button>
         </section>
         <Products addItem={addItem} products={products} isLoading={productsLoading} error={productsError} />
