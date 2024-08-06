@@ -1,10 +1,11 @@
-import {BadRequestException, Body, Controller, Get, Inject, Param, Post, UsePipes} from '@nestjs/common';
+import {Body, Controller, Get, Inject, Param, Post, UsePipes} from '@nestjs/common';
 import {ProductRepository} from './adapters/product.repo';
 import {ProductTemplate} from "./types";
 import {OrderRepository} from "./adapters/order.repo";
 import {CartRepository} from "./adapters/cart.repo";
 import {CART_REPO, ORDER_REPO, PRODUCT_REPO} from "./adapters";
 import {ZodValidationPipe} from "./zodValidationPipe";
+import {CartManager} from "./cartManager";
 
 @Controller("/products")
 export class ProductController {
@@ -34,15 +35,11 @@ export class OrderController {
 
 @Controller("/cart")
 export class CartController {
-    constructor(@Inject(PRODUCT_REPO) private productRepo: ProductRepository, @Inject(CART_REPO) private cartRepo: CartRepository) {}
+    constructor(@Inject(CartManager) private cartManager: CartManager, @Inject(CART_REPO) private cartRepo: CartRepository) {}
 
     @Post("/:cartId")
     async addToCart(@Param("cartId") cartId: string, @Body() {productId}: {productId: string}) {
-        const product = await this.productRepo.findById(productId);
-        if (!product) {
-            throw new BadRequestException(`product with id ${productId} not found`);
-        }
-        await this.cartRepo.addToCart(cartId, product);
+        await this.cartManager.addToCart(cartId, productId);
     }
 
     @Get("/:cartId/count")
@@ -59,15 +56,11 @@ export class CartController {
 
 @Controller("/checkout")
 export class CheckoutController {
-    constructor(@Inject(CART_REPO) private cartRepo: CartRepository, @Inject(ORDER_REPO) private orderRepo: OrderRepository) {}
+    constructor(@Inject(CartManager) private cartManager: CartManager) {}
 
     @Post("/:cartId")
     async checkout(@Param("cartId") cartId: string) {
-        const cart = await this.cartRepo.findById(cartId);
-        if (!cart) {
-            throw new BadRequestException(`no cart with id ${cartId} found`);
-        }
-        const order = await this.orderRepo.create({items: cart.items});
+        const order = await this.cartManager.checkout(cartId);
         return order.id
     }
 

@@ -21,7 +21,7 @@ const adapters = [
 
 describe.each(adapters)('the $name order repository', ({makeRepo}) => {
 
-    it('finds product by id', async () => {
+    it('finds order by id', async () => {
         const { repo, close } = await makeRepo();
 
         const order = await repo.create({items: [{productId: nanoid(), name: "foo", price: 666}]});
