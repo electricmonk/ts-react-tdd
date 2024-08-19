@@ -12,7 +12,7 @@ type AppContext = {
     orderRepo?: InMemoryOrderRepository
 };
 
-export async function makeApp({
+export async function runServerAndRenderApp({
                                   productRepo = new InMemoryProductRepository(),
                                   orderRepo = new InMemoryOrderRepository()
                               }: AppContext) {
