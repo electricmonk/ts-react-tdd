@@ -60,4 +60,21 @@ describe.each(adapters)('the $name product repository', ({makeRepo}) => {
 
         return close();
     });
+
+    it('finds products matching a case-insensitive query', async () => {
+        const { repo, close } = await makeRepo();
+
+        const p1 = await repo.create(aProduct({title: "foo"}));
+        const p2 = await repo.create(aProduct({title: "FOO"}));
+        const p3 = await repo.create(aProduct({title: "fOo"}));
+        const p4 = await repo.create(aProduct({title: "boo"}));
+
+        const found = await repo.findByTitle("foo");
+        expect(found).toContainEqual(p1);
+        expect(found).toContainEqual(p2);
+        expect(found).toContainEqual(p3);
+        expect(found).not.toContainEqual(p4);
+
+        return close();
+    });
 })
