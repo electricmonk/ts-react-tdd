@@ -23,6 +23,11 @@ export class InMemoryProductRepository implements ProductRepository {
     async findAll(): Promise<Product[]> {
         return this.products;
     }
+
+    async findByTitle(titleSearch: string): Promise<Product[]> {
+        return this.products.filter(({title}) => title.toLowerCase().includes(titleSearch?.toLowerCase()));
+    }
+
 }
 
 export class InMemoryOrderRepository implements OrderRepository {

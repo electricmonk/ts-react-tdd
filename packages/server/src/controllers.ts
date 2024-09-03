@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Inject, Param, Post, UsePipes} from '@nestjs/common';
+import {Body, Controller, Get, Inject, Param, Post, Query, UsePipes} from '@nestjs/common';
 import {ProductRepository} from './adapters/product.repo';
 import {ProductTemplate} from "./types";
 import {OrderRepository} from "./adapters/order.repo";
@@ -20,6 +20,11 @@ export class ProductController {
     @Get()
     async getProducts() {
         return this.productRepo.findAll();
+    }
+
+    @Get("/search")
+    async searchProducts(@Query("query") query: string) {
+        return this.productRepo.findByTitle(query);
     }
 }
 

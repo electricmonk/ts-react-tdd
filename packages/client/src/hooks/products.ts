@@ -7,12 +7,12 @@ type ProductQuery = {
 }
 export const useProducts = ({freeTextSearch}: ProductQuery) => {
     const {productCatalog} = useContext(IOContext);
-    const {data, isLoading, error} = useQuery("products", () => productCatalog.findAllProducts());
-
-    const products = data && (freeTextSearch.length > 0 ? data.filter(p => p.title.toLowerCase().includes(freeTextSearch.toLowerCase())) : data)
+    const {data, isLoading, error} = useQuery(["products", freeTextSearch], () => freeTextSearch?.length > 0 ?
+        productCatalog.searchProducts(freeTextSearch) :
+        productCatalog.findAllProducts());
 
     return {
-        products,
+        products: data,
         productsLoading: isLoading,
         productsError: error,
     }

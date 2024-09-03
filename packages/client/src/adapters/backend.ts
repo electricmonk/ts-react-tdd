@@ -29,8 +29,13 @@ export class HTTPShopBackend implements CartAdapter, OrderAdapter, ProductCatalo
     };
 
     findAllProducts = async () => {
-        const res = await this.axios.get<Product[]>(`/products`);
+        const res = await this.axios.get<unknown[]>(`/products`);
         return res.data.map(p => Product.parse(p));
     };
+
+    async searchProducts(freeTextSearch: string): Promise<Product[]> {
+        const res = await this.axios.get<unknown[]>(`/products/search?query=${freeTextSearch}`);
+        return res.data.map(p => Product.parse(p));
+    }
 
 }

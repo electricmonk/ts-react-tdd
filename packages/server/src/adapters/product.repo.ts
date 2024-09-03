@@ -32,6 +32,12 @@ export class MongoDBProductRepository {
         return this.products.findOne({_id: {$eq: new ObjectId(productId)}})
             .then(doc => doc ? docToProduct(doc) : undefined)
     }
+
+    async findByTitle(titleSearch: string): Promise<Product[]> {
+        return this.products.find({title: {$regex: titleSearch, $options: "i"}})
+            .map(docToProduct)
+            .toArray();
+    }
 }
 
 export type ProductRepository = Omit<MongoDBProductRepository, "products">;

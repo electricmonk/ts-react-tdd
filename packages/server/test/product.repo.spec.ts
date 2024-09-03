@@ -6,7 +6,8 @@ import {describe, it, expect} from 'vitest';
 
 const adapters = [
     {name: "mongodb", makeRepo: async () => {
-        const mongo = await new MongoClient(`mongodb://root:password@127.0.0.1?retryWrites=true&writeConcern=majority`).connect();
+        const mongo = new MongoClient(`mongodb://root:password@127.0.0.1?retryWrites=true&writeConcern=majority`);
+        await mongo.connect();
         const repo = new MongoDBProductRepository(mongo.db());
         return {
             repo,
@@ -40,6 +41,21 @@ describe.each(adapters)('the $name product repository', ({makeRepo}) => {
         const found = await repo.findAll();
         expect(found).toContainEqual(p1);
         expect(found).toContainEqual(p2);
+        expect(found).toContainEqual(p3);
+
+        return close();
+    });
+
+    it('finds products matching a title query', async () => {
+        const { repo, close } = await makeRepo();
+
+        const p1 = await repo.create(aProduct({title: "foo"}));
+        const p2 = await repo.create(aProduct({title: "bar"}));
+        const p3 = await repo.create(aProduct({title: "food"}));
+
+        const found = await repo.findByTitle("foo");
+        expect(found).toContainEqual(p1);
+        expect(found).not.toContainEqual(p2);
         expect(found).toContainEqual(p3);
 
         return close();
