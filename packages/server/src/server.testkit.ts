@@ -46,8 +46,8 @@ export async function createTestingModuleWithRegister(products: ProductTemplate[
     })
         .compile();
 
-    const productRepo: InMemoryProductRepository = testingModule.get(PRODUCT_REPO);
-    const orderRepo: InMemoryOrderRepository = testingModule.get(ORDER_REPO);
+    const productRepo = testingModule.get<InMemoryProductRepository>(PRODUCT_REPO);
+    const orderRepo = testingModule.get<InMemoryOrderRepository>(ORDER_REPO);
 
     const nest = testingModule.createNestApplication();
     nest.enableCors({origin: "*"});

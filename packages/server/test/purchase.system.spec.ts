@@ -1,8 +1,10 @@
 import {createTestingModule} from "../src/server.testkit";
 import {aProduct} from "../src/builders";
 import request from 'supertest';
+import {test, expect} from 'vitest';
 
 async function createTestHarness() {
+
     const {nest, ...rest} = await createTestingModule();
     return {
         app: request(nest.getHttpServer()),
@@ -14,20 +16,20 @@ async function createTestHarness() {
 test('a user can order a product', async () => {
     const {app, productRepo, orderRepo} = await createTestHarness();
 
-    const moogOne = await productRepo.create(aProduct({title: "Moog One"}));
+    const product = await productRepo.create(aProduct());
     const cartId = '666';
 
     await app
         .post(`/cart/${cartId}`)
-        .send({productId: moogOne.id})
+        .send({productId: product.id})
         .expect(201);
 
     await app
         .get(`/cart/${cartId}`)
         .expect({id: cartId, items: [{
-            productId: moogOne.id,
-            price: moogOne.price,
-            name: moogOne.title
+            productId: product.id,
+            price: product.price,
+            name: product.title
         }]});
 
     const orderId = await app
@@ -35,11 +37,12 @@ test('a user can order a product', async () => {
         .expect(201)
         .then(response => response.text);
 
-    expect(orderRepo.orders).toContainEqual(expect.objectContaining({
+    const order = await orderRepo.findById(orderId);
+    expect(order).toMatchObject(expect.objectContaining({
         id: orderId,
         items: expect.arrayContaining([
             expect.objectContaining({
-                productId: moogOne.id,
+                productId: product.id,
             })
         ])
     }));

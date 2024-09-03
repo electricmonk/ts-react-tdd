@@ -1,7 +1,8 @@
 import { MongoClient } from "mongodb";
 import { InMemoryProductRepository } from "../src/adapters/fake";
-import {MongoDBProductRepository, ProductRepository} from "../src/adapters/product.repo";
+import {MongoDBProductRepository } from "../src/adapters/product.repo";
 import { aProduct } from "../src/builders";
+import {describe, it, expect} from 'vitest';
 
 const adapters = [
     {name: "mongodb", makeRepo: async () => {

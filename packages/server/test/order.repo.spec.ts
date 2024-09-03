@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb";
 import { nanoid } from "nanoid";
 import { InMemoryOrderRepository } from "../src/adapters/fake";
 import { MongoDBOrderRepository } from "../src/adapters/order.repo";
+import {describe, it, expect} from 'vitest';
 
 
 const adapters = [
