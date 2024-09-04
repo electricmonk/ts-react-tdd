@@ -2,7 +2,7 @@ import {MongoClient} from "mongodb";
 import {createCartApp} from "./app";
 import {MongoDBOrderRepository} from "../adapters/order.repo";
 import {ClientsModule, Transport} from "@nestjs/microservices";
-import {CART_CLIENT} from "./cartManager";
+import {CART_CLIENT} from "./kafkaCartManager";
 
 export const CART_PORT = 8082;
 

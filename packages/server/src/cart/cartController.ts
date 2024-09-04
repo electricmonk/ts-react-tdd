@@ -1,11 +1,11 @@
 import {Body, Controller, Get, Inject, Param, Post} from '@nestjs/common';
 import {CartRepository} from "../adapters/cart.repo";
 import {CART_REPO} from "../adapters";
-import {CartManager} from "./cartManager";
+import {KafkaCartManager} from "./kafkaCartManager";
 
 @Controller("/cart")
 export class CartController {
-    constructor(@Inject(CartManager) private cartManager: CartManager, @Inject(CART_REPO) private cartRepo: CartRepository) {}
+    constructor(@Inject(KafkaCartManager) private cartManager: KafkaCartManager, @Inject(CART_REPO) private cartRepo: CartRepository) {}
 
     @Post("/:cartId")
     async addToCart(@Param("cartId") cartId: string, @Body() {productId}: {productId: string}) {
