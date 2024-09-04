@@ -8,6 +8,10 @@ import {MongoDBModule} from "./adapters/mongodb.module";
 import {Module} from "@nestjs/common";
 import {AppModuleWithRegister} from "./app.module.register";
 import {MemoryModule} from "./adapters/memory.module";
+import {createCatalogApp} from "./catalog/app";
+import {createOrdersApp} from "./orders/app";
+import {createCartApp} from "./cart/app";
+
 export async function createTestingModuleWithIoC(products: ProductTemplate[] = []) {
     const productRepo = new InMemoryProductRepository(products);
     const orderRepo = new InMemoryOrderRepository();
@@ -66,3 +70,15 @@ export const createTestingModule = createTestingModuleWithRegister;
     }],
 })
 class NopModule{}
+
+export async function runMicroservices(products: ProductTemplate[] = []) {
+
+    const productRepo = new InMemoryProductRepository(products);
+    const orderRepo = new InMemoryOrderRepository();
+
+    const catalogApp = await createCatalogApp(productRepo);
+    const ordersApp = await createOrdersApp(orderRepo);
+    const cartApp = await createCartApp(productRepo, orderRepo);
+
+    return {catalogApp, ordersApp, cartApp, orderRepo, productRepo};
+}

@@ -21,7 +21,7 @@ export class HTTPShopBackend implements CartAdapter, OrderAdapter, ProductCatalo
         return CartSummary.parse(res.data);
     }
 
-    checkout = async (cartId: string) => (await this.axios.post<string>(`/checkout/${cartId}`)).data;
+    checkout = async (cartId: string) => (await this.axios.post<string>(`/cart/${cartId}/checkout`)).data;
 
     getOrder = async (orderId: string) => {
         const res = await this.axios.get<Order>(`/order/${orderId}`);

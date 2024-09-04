@@ -1,8 +1,8 @@
-import {CartRepository} from "./adapters/cart.repo";
+import {CartRepository} from "../adapters/cart.repo";
 import {BadRequestException, Inject, Injectable} from "@nestjs/common";
-import {CART_REPO, ORDER_REPO, PRODUCT_REPO} from "./adapters";
-import {ProductRepository} from "./adapters/product.repo";
-import {OrderRepository} from "./adapters/order.repo";
+import {CART_REPO, ORDER_REPO, PRODUCT_REPO} from "../adapters";
+import {ProductRepository} from "../adapters/product.repo";
+import {OrderRepository} from "../adapters/order.repo";
 
 @Injectable()
 export class CartManager {
