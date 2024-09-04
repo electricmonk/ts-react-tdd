@@ -4,8 +4,9 @@
   "description": "",
   "main": "src/monolith/index.ts",
   "scripts": {
-    "dev": "nodemon src/monolith/index.ts",
-    "serve:ci": "ts-node src/monolith/index.ts",
+    "dev:monolith": "nodemon src/monolith/index.ts",
+    "dev": "nodemon src/index.ts",
+    "serve:ci": "ts-node src/index.ts",
     "test": "vitest run"
   },
   "keywords": [],

@@ -4330,6 +4330,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"kafkajs@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "kafkajs@npm:2.2.4"
+  checksum: 83e9e8bc50a09b142f4ff79f6a2bd88ecc21b83bcefe6621ab1716118d624886befb7371731274f67812ce35dd50b53140ff3b49a06e5d9169fe6b164d72fea5
+  languageName: node
+  linkType: hard
+
 "kuler@npm:^2.0.0":
   version: 2.0.0
   resolution: "kuler@npm:2.0.0"
@@ -5859,6 +5866,7 @@ __metadata:
     "@types/cookie-parser": ^1.4.7
     cookie-parser: ^1.4.6
     jsdom: ^24.1.0
+    kafkajs: ^2.2.4
     nest-memory-transport: ^1.0.3
     winston: ^3.13.0
   languageName: unknown

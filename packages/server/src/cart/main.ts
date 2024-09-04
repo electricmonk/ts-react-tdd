@@ -3,15 +3,13 @@ import {createCartApp} from "./app";
 import {MongoDBOrderRepository} from "../adapters/order.repo";
 import {ClientsModule, Transport} from "@nestjs/microservices";
 import {CART_CLIENT} from "./kafkaCartManager";
+import {MongoConfig} from "../adapters/mongodb.module";
+import {CART_PORT} from "../ports";
 
-export const CART_PORT = 8082;
+export async function startCartServer({uri, dbName, ...config}: MongoConfig) {
+    const mongo = await new MongoClient(uri, config).connect();
 
-async function startServer() {
-    const mongo = await new MongoClient(
-        `mongodb://root:password@127.0.0.1?retryWrites=true&writeConcern=majority`
-    ).connect();
-
-    const db = mongo.db("store");
+    const db = mongo.db(dbName);
     const orderRepo = new MongoDBOrderRepository(db);
     const clientsModule = ClientsModule.register([
         {
@@ -31,5 +29,3 @@ async function startServer() {
     const app = await createCartApp(clientsModule, orderRepo);
     await app.listen(CART_PORT);
 }
-
-void startServer();

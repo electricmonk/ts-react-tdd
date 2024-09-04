@@ -5,13 +5,13 @@ import {MongoDBProductRepository} from "./product.repo";
 import {MongoDBOrderRepository} from "./order.repo";
 import {MemoryCartRepository} from "./cart.repo";
 
-type Config = {
+export type MongoConfig = {
     uri: string;
     dbName: string;
 } & Pick<MongoClientOptions, 'connectTimeoutMS' | 'serverSelectionTimeoutMS' | 'socketTimeoutMS'>
 
 export class MongoDBModule {
-    static forRoot({uri, dbName, ...config}: Config): DynamicModule {
+    static forRoot({uri, dbName, ...config}: MongoConfig): DynamicModule {
 
         return {
             module: MongoDBModule,

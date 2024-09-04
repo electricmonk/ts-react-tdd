@@ -6,21 +6,7 @@ import {AppModuleInversionOfControl} from "./app.module.ioc";
 import {AppModuleOverrides} from "./app.module.overrides";
 import {AppModuleWithRegister} from "./app.module.register";
 import {MongoDBModule} from "../adapters/mongodb.module";
-import {z} from "zod";
-
-const EnvConfig = z.object({
-    MONGO_URI: z.string().default('mongodb://root:password@127.0.0.1'),
-    MONGO_DB: z.string().default('store'),
-    MONGO_CONNECT_TIMEOUT: z.number().default(100),
-    MONGO_SOCKET_TIMEOUT: z.number().default(100),
-    MONGO_SERVER_SELECTION_TIMEOUT: z.number().default(100),
-}).transform((input) => ({
-    uri: input.MONGO_URI,
-    dbName: input.MONGO_DB,
-    connectTimeoutMS: input.MONGO_CONNECT_TIMEOUT,
-    socketTimeoutMS: input.MONGO_SOCKET_TIMEOUT,
-    serverSelectionTimeoutMS: input.MONGO_SERVER_SELECTION_TIMEOUT,
-}));
+import {Config} from "../config";
 
 // @ts-ignore
 async function startServerIoC() {
@@ -45,7 +31,7 @@ async function startServerOverrides() {
 }
 
 async function startServerRegister() {
-    const config = EnvConfig.parse(process.env);
+    const config = Config.parse(process.env);
     const app = await NestFactory.create(AppModuleWithRegister.register(
         MongoDBModule.forRoot(config)
     ));

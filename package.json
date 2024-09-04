@@ -19,6 +19,7 @@
   "dependencies": {
     "@nestjs/config": "^3.2.2",
     "@nestjs/microservices": "^10.4.1",
+    "kafkajs": "^2.2.4",
     "winston": "^3.13.0"
   }
 }

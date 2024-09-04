@@ -2,15 +2,13 @@ import {MongoClient} from "mongodb";
 import {MongoDBProductRepository} from "../adapters/product.repo";
 import {createCatalogApp} from "./app";
 import {Transport} from "@nestjs/microservices";
+import {MongoConfig} from "../adapters/mongodb.module";
+import {CATALOG_PORT} from "../ports";
 
-export const CATALOG_PORT = 8081;
+export async function startCatalogServer({uri, dbName, ...config}: MongoConfig) {
+    const mongo = await new MongoClient(uri, config).connect();
 
-async function startServer() {
-    const mongo = await new MongoClient(
-        `mongodb://root:password@127.0.0.1?retryWrites=true&writeConcern=majority`
-    ).connect();
-
-    const db = mongo.db("store");
+    const db = mongo.db(dbName);
     const productRepo = new MongoDBProductRepository(db);
     const app = await createCatalogApp(productRepo, {
         transport: Transport.KAFKA,
@@ -26,5 +24,3 @@ async function startServer() {
     });
     await app.listen(CATALOG_PORT);
 }
-
-void startServer();
