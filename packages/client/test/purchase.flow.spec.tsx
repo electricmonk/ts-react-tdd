@@ -1,10 +1,11 @@
 import {aProduct} from "@ts-react-tdd/server/src/builders";
-import {makeApp} from "../src/adapters/harness";
+import {makeMicroservicesApp} from "../src/adapters/harness";
+import {test, expect} from 'vitest'
 
 test("a user can purchase a product, see the confirmation page and see their order summary, after which the cart is reset", async () => {
 
     const moogOne = aProduct({title: "Moog One"});
-    using harness = await makeApp({
+    using harness = await makeMicroservicesApp({
         products: [moogOne],
     });
     const {driver, orderRepo} = harness;

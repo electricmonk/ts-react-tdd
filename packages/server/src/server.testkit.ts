@@ -1,12 +1,12 @@
 import {ProductTemplate} from "./types";
 import {Test} from "@nestjs/testing";
 import {InMemoryOrderRepository, InMemoryProductRepository} from "./adapters/fake";
-import {AppModuleInversionOfControl} from "./app.module.ioc";
-import {AppModuleOverrides} from "./app.module.overrides";
+import {AppModuleInversionOfControl} from "./monolith/app.module.ioc";
+import {AppModuleOverrides} from "./monolith/app.module.overrides";
 import {ORDER_REPO, PRODUCT_REPO} from "./adapters";
 import {MongoDBModule} from "./adapters/mongodb.module";
 import {Module} from "@nestjs/common";
-import {AppModuleWithRegister} from "./app.module.register";
+import {AppModuleWithRegister} from "./monolith/app.module.register";
 import {MemoryModule} from "./adapters/memory.module";
 import {createCatalogApp} from "./catalog/app";
 import {createOrdersApp} from "./orders/app";

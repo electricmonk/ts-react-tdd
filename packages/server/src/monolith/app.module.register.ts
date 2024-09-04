@@ -1,8 +1,6 @@
 import {DynamicModule, Module} from "@nestjs/common";
-import {CartController} from "./cart/cartController";
-import {KafkaCartManager} from "./cart/kafkaCartManager";
-import {ProductController} from "./catalog/productController";
-import {OrderController} from "./orders/orderController";
+import {MonolithicCartManager} from "./monolithic-cart-manager";
+import {CartController, OrderController, ProductController} from "./controllers";
 
 
 @Module({
@@ -11,7 +9,7 @@ export class AppModuleWithRegister {
     static register(adapters: DynamicModule): DynamicModule {
         return {
             imports: [adapters],
-            providers: [KafkaCartManager],
+            providers: [MonolithicCartManager],
             controllers: [CartController, ProductController, OrderController],
             module: AppModuleWithRegister
         }

@@ -2,10 +2,10 @@
   "name": "@ts-react-tdd/server",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "main": "src/monolith/index.ts",
   "scripts": {
-    "dev": "nodemon src/index.ts",
-    "serve:ci": "ts-node src/index.ts",
+    "dev": "nodemon src/monolith/index.ts",
+    "serve:ci": "ts-node src/monolith/index.ts",
     "test": "vitest run"
   },
   "keywords": [],

@@ -1,11 +1,10 @@
 import {DynamicModule, Module} from "@nestjs/common";
-import {CartController} from "./cart/cartController";
-import {OrderRepository} from "./adapters/order.repo";
-import {ProductRepository} from "./adapters/product.repo";
-import {CART_REPO, ORDER_REPO, PRODUCT_REPO} from "./adapters";
-import {MemoryCartRepository} from "./adapters/cart.repo";
-import {ProductController} from "./catalog/productController";
-import {OrderController} from "./orders/orderController";
+import {OrderRepository} from "../adapters/order.repo";
+import {ProductRepository} from "../adapters/product.repo";
+import {CART_REPO, ORDER_REPO, PRODUCT_REPO} from "../adapters";
+import {MemoryCartRepository} from "../adapters/cart.repo";
+import {MonolithicCartManager} from "./monolithic-cart-manager";
+import {CartController, OrderController, ProductController} from "./controllers";
 
 @Module({})
 export class AppModuleInversionOfControl {
@@ -24,7 +23,8 @@ export class AppModuleInversionOfControl {
                 {
                     provide: CART_REPO,
                     useClass: MemoryCartRepository,
-                }
+                },
+                MonolithicCartManager
             ],
             controllers: [CartController, ProductController, OrderController]
 

@@ -1,11 +1,11 @@
 import {MongoClient} from "mongodb";
-import {MongoDBOrderRepository} from "./adapters/order.repo";
-import {MongoDBProductRepository} from "./adapters/product.repo";
+import {MongoDBOrderRepository} from "../adapters/order.repo";
+import {MongoDBProductRepository} from "../adapters/product.repo";
 import {NestFactory} from "@nestjs/core";
-import {AppModuleInversionOfControl} from "./monolith/app.module.ioc";
-import {AppModuleOverrides} from "./monolith/app.module.overrides";
-import {AppModuleWithRegister} from "./monolith/app.module.register";
-import {MongoDBModule} from"./adapters/mongodb.module";
+import {AppModuleInversionOfControl} from "./app.module.ioc";
+import {AppModuleOverrides} from "./app.module.overrides";
+import {AppModuleWithRegister} from "./app.module.register";
+import {MongoDBModule} from "../adapters/mongodb.module";
 import {z} from "zod";
 
 const EnvConfig = z.object({
@@ -54,3 +54,5 @@ async function startServerRegister() {
 }
 
 void startServerRegister();
+
+
