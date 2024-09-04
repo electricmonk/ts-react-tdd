@@ -2,12 +2,13 @@ import {runMicroservices} from "../src/server.testkit";
 import {aProduct} from "../src/builders";
 import request from 'supertest';
 import {test, expect} from 'vitest';
-import {Order} from "../src/types";
+import {Order, Product, ProductTemplate} from "../src/types";
 
-async function createTestHarness() {
+async function createTestHarness(products: ProductTemplate[]) {
 
-    const {ordersApp, cartApp, ...rest} = await runMicroservices();
+    const {ordersApp, cartApp, catalogApp, ...rest} = await runMicroservices(products);
     return {
+        catalogApp: request(catalogApp.getHttpServer()),
         ordersApp: request(ordersApp.getHttpServer()),
         cartApp: request(cartApp.getHttpServer()),
         ...rest
@@ -16,10 +17,19 @@ async function createTestHarness() {
 
 // this test is not really required, it's wholly contained within purchase.flow.spec.tsx
 test('a user can order a product from the microservices-based system', async () => {
-    const {ordersApp, cartApp, productRepo } = await createTestHarness();
+    const {ordersApp, cartApp, catalogApp } = await createTestHarness([aProduct()]);
 
-    const product = await productRepo.create(aProduct());
     const cartId = '666';
+
+    const products = await catalogApp.get('/products/')
+        .expect(200)
+        .then((response) => {
+            const items: unknown[] = response.body;
+            return items.map(item => Product.parse(item));
+        });
+
+    expect(products).toHaveLength(1);
+    const product = products[0];
 
     await cartApp
         .post(`/cart/${cartId}`)

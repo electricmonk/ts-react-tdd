@@ -2,18 +2,18 @@ import { Collection, Db, ObjectId, WithId } from "mongodb";
 import { Order } from "../types";
 import {Inject, Injectable} from "@nestjs/common";
 
-type MongoOrder = Omit<Order, "id">;
-const docToOrder = ({_id, ...rest}: WithId<MongoOrder>) => Order.parse({id: _id.toString(), ...rest});
+export type OrderTemplate = Omit<Order, "id">;
+const docToOrder = ({_id, ...rest}: WithId<OrderTemplate>) => Order.parse({id: _id.toString(), ...rest});
 
 @Injectable()
 export class MongoDBOrderRepository {
-    private orders: Collection<MongoOrder>;
+    private orders: Collection<OrderTemplate>;
 
     constructor(@Inject("storeDB") db: Db) {
         this.orders = db.collection("orders");
     }
 
-    async create(order: MongoOrder): Promise<Order> {
+    async create(order: OrderTemplate): Promise<Order> {
         const res = await this.orders.insertOne({_id: new ObjectId(), ...order});
         return {
             id: res.insertedId.toString(),

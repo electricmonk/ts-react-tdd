@@ -753,6 +753,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/common@npm:^10.0.0":
+  version: 10.4.1
+  resolution: "@nestjs/common@npm:10.4.1"
+  dependencies:
+    iterare: 1.2.1
+    tslib: 2.6.3
+    uid: 2.0.2
+  peerDependencies:
+    class-transformer: "*"
+    class-validator: "*"
+    reflect-metadata: ^0.1.12 || ^0.2.0
+    rxjs: ^7.1.0
+  peerDependenciesMeta:
+    class-transformer:
+      optional: true
+    class-validator:
+      optional: true
+  checksum: 5bdeff65729251fae2c0bda1b8af04b634d4ba2931b836423e0bc9ac4a81ae8f4af812013468ed6373d67554ddbd1326094b7c32f243e94d5e17b214f2447ce4
+  languageName: node
+  linkType: hard
+
 "@nestjs/common@npm:^10.3.7":
   version: 10.3.7
   resolution: "@nestjs/common@npm:10.3.7"
@@ -814,6 +835,49 @@ __metadata:
     "@nestjs/websockets":
       optional: true
   checksum: e364bf7dc82b01bd579ad32f6fd7b0e7183913e5670ca6c3e2b0a8d1f0c63d43a8f8495a257957c284483f597c1df27b654c50830ede75c4978f8c158eee9822
+  languageName: node
+  linkType: hard
+
+"@nestjs/microservices@npm:^10.4.0, @nestjs/microservices@npm:^10.4.1":
+  version: 10.4.1
+  resolution: "@nestjs/microservices@npm:10.4.1"
+  dependencies:
+    iterare: 1.2.1
+    tslib: 2.6.3
+  peerDependencies:
+    "@grpc/grpc-js": "*"
+    "@nestjs/common": ^10.0.0
+    "@nestjs/core": ^10.0.0
+    "@nestjs/websockets": ^10.0.0
+    amqp-connection-manager: "*"
+    amqplib: "*"
+    cache-manager: "*"
+    ioredis: "*"
+    kafkajs: "*"
+    mqtt: "*"
+    nats: "*"
+    reflect-metadata: ^0.1.12 || ^0.2.0
+    rxjs: ^7.1.0
+  peerDependenciesMeta:
+    "@grpc/grpc-js":
+      optional: true
+    "@nestjs/websockets":
+      optional: true
+    amqp-connection-manager:
+      optional: true
+    amqplib:
+      optional: true
+    cache-manager:
+      optional: true
+    ioredis:
+      optional: true
+    kafkajs:
+      optional: true
+    mqtt:
+      optional: true
+    nats:
+      optional: true
+  checksum: 28c5dedcc1560b15d7f3cfae04d5b1fcd14d2e8a3727e9c93bf43a063025ebdf23dfe14d9405f235add6f9748897394a7ffb925b377de8cbad960bcd181f6ac3
   languageName: node
   linkType: hard
 
@@ -4813,6 +4877,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nest-memory-transport@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "nest-memory-transport@npm:1.0.3"
+  dependencies:
+    "@nestjs/common": ^10.0.0
+    "@nestjs/microservices": ^10.4.0
+    reflect-metadata: ^0.2.0
+    rxjs: ^7.8.1
+  checksum: 0c97d76715f6e098bd7f96bdbc6f579a9892327520bfe0b90ae9dc5205f7dffd2f6948c2c12fec4afab0be2be6a625f300e95c588cc3cdbfce8ce44e8f4d74e3
+  languageName: node
+  linkType: hard
+
 "no-case@npm:^3.0.4":
   version: 3.0.4
   resolution: "no-case@npm:3.0.4"
@@ -5619,7 +5695,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reflect-metadata@npm:^0.2.2":
+"reflect-metadata@npm:^0.2.0, reflect-metadata@npm:^0.2.2":
   version: 0.2.2
   resolution: "reflect-metadata@npm:0.2.2"
   checksum: a66c7b583e4efdd8f3c3124fbff33da2d0c86d8280617516308b32b2159af7a3698c961db3246387f56f6316b1d33a608f39bb2b49d813316dfc58f6d3bf3210
@@ -5779,9 +5855,11 @@ __metadata:
   resolution: "root@workspace:."
   dependencies:
     "@nestjs/config": ^3.2.2
+    "@nestjs/microservices": ^10.4.1
     "@types/cookie-parser": ^1.4.7
     cookie-parser: ^1.4.6
     jsdom: ^24.1.0
+    nest-memory-transport: ^1.0.3
     winston: ^3.13.0
   languageName: unknown
   linkType: soft
@@ -6510,6 +6588,13 @@ __metadata:
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.6.3":
+  version: 2.6.3
+  resolution: "tslib@npm:2.6.3"
+  checksum: 74fce0e100f1ebd95b8995fbbd0e6c91bdd8f4c35c00d4da62e285a3363aaa534de40a80db30ecfd388ed7c313c42d930ee0eaf108e8114214b180eec3dbe6f5
   languageName: node
   linkType: hard
 

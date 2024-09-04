@@ -3,6 +3,7 @@ import {PRODUCT_REPO} from "../adapters";
 import {ProductRepository} from "../adapters/product.repo";
 import {ZodValidationPipe} from "../zodValidationPipe";
 import {ProductTemplate} from "../types";
+import {MessagePattern} from "@nestjs/microservices";
 
 @Controller("/products")
 export class ProductController {
@@ -23,5 +24,10 @@ export class ProductController {
     @Get("/search")
     async searchProducts(@Query("query") query: string) {
         return this.productRepo.findByTitle(query);
+    }
+
+    @MessagePattern('productById')
+    async findProductById(id: string) {
+        return this.productRepo.findById(id);
     }
 }

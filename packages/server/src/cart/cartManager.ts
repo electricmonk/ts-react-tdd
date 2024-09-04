@@ -1,18 +1,20 @@
 import {CartRepository} from "../adapters/cart.repo";
-import {BadRequestException, Inject, Injectable} from "@nestjs/common";
-import {CART_REPO, ORDER_REPO, PRODUCT_REPO} from "../adapters";
-import {ProductRepository} from "../adapters/product.repo";
-import {OrderRepository} from "../adapters/order.repo";
+import {BadRequestException, Inject, Injectable, OnModuleInit} from "@nestjs/common";
+import {CART_REPO} from "../adapters";
+import {ClientKafka} from "@nestjs/microservices";
+import {Order, Product} from "../types";
+import {firstValueFrom} from "rxjs";
+
+export const CART_CLIENT = 'cartClient';
 
 @Injectable()
-export class CartManager {
-    constructor(@Inject(PRODUCT_REPO) private productRepo: ProductRepository,
-                @Inject(ORDER_REPO) private orderRepo: OrderRepository,
+export class CartManager implements OnModuleInit{
+    constructor(@Inject(CART_CLIENT) private clients: ClientKafka,
                 @Inject(CART_REPO) private cartRepo: CartRepository) {
     }
 
     async addToCart(cartId: string, productId: string) {
-        const product = await this.productRepo.findById(productId);
+        const product = await firstValueFrom(this.clients.send<Product>('productById', productId));
         if (!product) {
             throw new Error(`product with id ${productId} not found`);
         }
@@ -24,6 +26,11 @@ export class CartManager {
         if (!cart) {
             throw new BadRequestException(`no cart with id ${cartId} found`);
         }
-        return this.orderRepo.create({items: cart.items});
+        return firstValueFrom(this.clients.send<Order>('createOrder', {items: cart.items}));
+    }
+
+    async onModuleInit() {
+        this.clients.subscribeToResponseOf('productById');
+        await this.clients.connect();
     }
 }

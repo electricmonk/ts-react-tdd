@@ -11,6 +11,9 @@ import {MemoryModule} from "./adapters/memory.module";
 import {createCatalogApp} from "./catalog/app";
 import {createOrdersApp} from "./orders/app";
 import {createCartApp} from "./cart/app";
+import EventEmitter from "node:events";
+import {MemoryClientsModule, MemoryTransportServer} from "nest-memory-transport";
+import {CART_CLIENT} from "./cart/cartManager";
 
 export async function createTestingModuleWithIoC(products: ProductTemplate[] = []) {
     const productRepo = new InMemoryProductRepository(products);
@@ -73,12 +76,16 @@ class NopModule{}
 
 export async function runMicroservices(products: ProductTemplate[] = []) {
 
+    const emitter = new EventEmitter();
     const productRepo = new InMemoryProductRepository(products);
     const orderRepo = new InMemoryOrderRepository();
 
-    const catalogApp = await createCatalogApp(productRepo);
-    const ordersApp = await createOrdersApp(orderRepo);
-    const cartApp = await createCartApp(productRepo, orderRepo);
+    const catalogApp = await createCatalogApp(productRepo, {strategy: new MemoryTransportServer(emitter)});
+    const ordersApp = await createOrdersApp(orderRepo, {strategy: new MemoryTransportServer(emitter)});
+    const cartApp = await createCartApp(MemoryClientsModule.register({
+        name: CART_CLIENT,
+        emitter,
+    }), orderRepo);
 
     return {catalogApp, ordersApp, cartApp, orderRepo, productRepo};
 }
