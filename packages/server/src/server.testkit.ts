@@ -78,16 +78,17 @@ export async function runMicroservices(products: ProductTemplate[] = []) {
 
     const emitter = new EventEmitter();
     const strategy = new MemoryTransportServer(emitter);
+    const clientsModule = MemoryClientsModule.register({
+        name: CART_CLIENT,
+        emitter,
+    });
 
     const productRepo = new InMemoryProductRepository(products);
     const orderRepo = new InMemoryOrderRepository();
 
     const catalogApp = await createCatalogApp(productRepo, {strategy});
     const ordersApp = await createOrdersApp(orderRepo, {strategy});
-    const cartApp = await createCartApp(MemoryClientsModule.register({
-        name: CART_CLIENT,
-        emitter,
-    }), orderRepo);
+    const cartApp = await createCartApp(clientsModule);
 
     return {catalogApp, ordersApp, cartApp, orderRepo, productRepo};
 }

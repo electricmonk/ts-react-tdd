@@ -15,7 +15,6 @@ export class CatalogModule {
                 },
             ],
             controllers: [ProductController]
-
         }
     }
 }

@@ -9,7 +9,7 @@ async function startAllMicroservicesInProcess() {
 
     await startCatalogServer(config);
     await startOrdersServer(config);
-    await startCartServer(config);
+    await startCartServer();
 }
 
 void startAllMicroservicesInProcess();

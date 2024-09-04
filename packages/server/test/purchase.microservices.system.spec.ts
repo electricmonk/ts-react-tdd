@@ -15,7 +15,6 @@ async function createTestHarness(products: ProductTemplate[]) {
     }
 }
 
-// this test is not really required, it's wholly contained within purchase.flow.spec.tsx
 test('a user can order a product from the microservices-based system', async () => {
     const {ordersApp, cartApp, catalogApp } = await createTestHarness([aProduct()]);
 
