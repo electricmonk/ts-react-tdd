@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from "react";
 import persistantStorage from "../services/persistantStorage";
 import {IOContext} from "../adapters/context";
 import {useMutation, useQuery} from "react-query";
-import {Product} from "@ts-react-tdd/server/src/types";
+import {CartSummary, Product} from "@ts-react-tdd/server/src/types";
 import {useNavigate} from "react-router-dom";
 
 const KEY = "cartId";
@@ -36,12 +36,16 @@ export const useCartId = () => {
 export const useCartSummary = (id: string) => {
     const {cart} = useContext(IOContext);
     const {data: summary, isLoading, error} = useQuery({
-        queryKey: 'cartSummary',
-        queryFn: () => cart.getCartSummary(id)
+        queryKey: ['cartSummary', id],
+        queryFn: async () => {
+            const res = await cart.get<CartSummary>(`/cart/${id}`);
+            return CartSummary.parse(res.data);
+        }
     })
 
     const checkout = async () => {
-        return cart.checkout(id);
+        const res = await cart.post<string>(`/cart/${id}/checkout`);
+        return res.data;
     }
 
     return {isLoading, error, summary, checkout};
@@ -51,13 +55,16 @@ export const useCartWidget = (cartId: string) => {
 
     const itemCount = useQuery({
         queryKey: "itemCount",
-        queryFn: () => cart.getCount(cartId),
+        queryFn: async () => {
+            const res = await cart.get<number>(`/cart/${cartId}/count`);
+            return res.data;
+        },
         onError: (error) => console.error(error)
     });
     const addItem = useMutation({
         onError: (error) => console.error(error),
         mutationFn: async (productId: Product["id"]) => {
-            await cart.addItem(cartId, productId);
+            await cart.post<void>(`/cart/${cartId}`, { productId });
             await itemCount.refetch();
         }
     });

@@ -1,31 +1,25 @@
 import React, { PropsWithChildren, useMemo } from "react";
-import { HTTPShopBackend } from './backend';
-import { CartAdapter } from "./cart";
-import { OrderAdapter } from "./order";
-import { ProductCatalog } from "./productCatalog";
-import axios from "axios";
+import axios, {AxiosInstance} from "axios";
 
 type Adapters = {
-  cart: CartAdapter;
-  productCatalog: ProductCatalog;
-  orders: OrderAdapter;
+  cart: AxiosInstance;
+  productCatalog: AxiosInstance;
+  orders: AxiosInstance;
 }
 
 export const IOContext = React.createContext<Adapters>(undefined as unknown as Adapters);
 
 export const MonolithIOProvider: React.FC<PropsWithChildren<{backendUrl: string}>> = ({backendUrl, children}) => {
-  const client = axios.create({ baseURL: backendUrl })
+  const client = useMemo(() => axios.create({ baseURL: backendUrl }), [backendUrl])
 
-  const backend = useMemo(() => new HTTPShopBackend(client, client, client), [backendUrl]);
-  return <IOContext.Provider value={{cart: backend, productCatalog: backend, orders: backend}}>{children}</IOContext.Provider>;
+  return <IOContext.Provider value={{cart: client, productCatalog: client, orders: client}}>{children}</IOContext.Provider>;
 }
 
 type Props = PropsWithChildren<{catalogUrl: string, cartUrl: string, ordersUrl: string}>;
 export const MicroservicesIOProvider: React.FC<Props> = ({catalogUrl, cartUrl, ordersUrl, children}) => {
-  const cart = axios.create({ baseURL: cartUrl })
-  const catalog = axios.create({ baseURL: catalogUrl })
-  const orders = axios.create({ baseURL: ordersUrl })
+  const cart = useMemo(() => axios.create({ baseURL: cartUrl }), [cartUrl])
+  const productCatalog = useMemo(() => axios.create({ baseURL: catalogUrl }), [catalogUrl])
+  const orders = useMemo(() => axios.create({ baseURL: ordersUrl }), [ordersUrl])
 
-  const backend = useMemo(() => new HTTPShopBackend(cart, catalog, orders), [cartUrl, catalogUrl, ordersUrl]);
-  return <IOContext.Provider value={{cart: backend, productCatalog: backend, orders: backend}}>{children}</IOContext.Provider>;
+  return <IOContext.Provider value={{cart, productCatalog, orders}}>{children}</IOContext.Provider>;
 }
