@@ -9,19 +9,11 @@ type ProductQuery = {
 export const useProducts = ({freeTextSearch}: ProductQuery) => {
     const {productCatalog} = useContext(IOContext);
 
-    const searchProducts = async () => {
-        const res = await productCatalog.get<unknown[]>(`/products/search?query=${freeTextSearch}`);
+    const {data, isLoading, error} = useQuery(["products", freeTextSearch], async () => {
+        const url = freeTextSearch?.length > 0 ? `/products/search?query=${freeTextSearch}` : `/products`;
+        const res = await productCatalog.get<unknown[]>(url);
         return res.data.map(p => Product.parse(p));
-    };
-
-    const findAllProducts = async () => {
-        const res = await productCatalog.get<unknown[]>(`/products`);
-        return res.data.map(p => Product.parse(p));
-    }
-
-    const {data, isLoading, error} = useQuery(["products", freeTextSearch], () => freeTextSearch?.length > 0 ?
-        searchProducts() :
-        findAllProducts());
+    });
 
     return {
         products: data,
