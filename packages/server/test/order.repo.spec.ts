@@ -1,7 +1,8 @@
 import { MongoClient } from "mongodb";
 import { nanoid } from "nanoid";
-import { InMemoryOrderRepository } from "../src/adapters/fakes";
+import { InMemoryOrderRepository } from "../src/adapters/fake";
 import { MongoDBOrderRepository } from "../src/adapters/order.repo";
+import {describe, it, expect} from 'vitest';
 
 
 const adapters = [
@@ -21,7 +22,7 @@ const adapters = [
 
 describe.each(adapters)('the $name order repository', ({makeRepo}) => {
 
-    it('finds product by id', async () => {
+    it('finds order by id', async () => {
         const { repo, close } = await makeRepo();
 
         const order = await repo.create({items: [{productId: nanoid(), name: "foo", price: 666}]});

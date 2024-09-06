@@ -13,7 +13,9 @@
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
     "noUnusedLocals": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": ["src", "test"]
 }

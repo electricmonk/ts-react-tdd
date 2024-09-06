@@ -34,3 +34,8 @@ export const Order = z.object({
 });
 
 export type Order = z.infer<typeof Order>;
+
+export type Cart = {
+  id: string;
+  items: LineItem[];
+}
