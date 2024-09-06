@@ -64,11 +64,11 @@ export async function makeMonolithicApp({
     };
 }
 
-export async function makeMicroservicesApp({
+export async function runBackendAndRender({
                                   products = [],
                               }: AppContext) {
 
-    const { catalogApp, ordersApp, cartApp, orderRepo, productRepo } = await runMicroservices(products)
+    const { catalogApp, ordersApp, cartApp, orderRepo } = await runMicroservices(products)
 
     const queryClient = new QueryClient();
 
@@ -85,9 +85,8 @@ export async function makeMicroservicesApp({
     const driver = createDriver(app);
 
     return {
-        productRepo,
         orderRepo,
-        driver,
+        app: driver,
         [Symbol.dispose]: async () => {
             await cartServer.close();
             await catalogServer.close();

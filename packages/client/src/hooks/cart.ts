@@ -50,6 +50,7 @@ export const useCartSummary = (id: string) => {
 
     return {isLoading, error, summary, checkout};
 }
+
 export const useCartWidget = (cartId: string) => {
     const {cart} = useContext(IOContext);
 
