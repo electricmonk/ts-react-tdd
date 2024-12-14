@@ -22,7 +22,7 @@
     "fastify": "^4.27.0",
     "fastify-type-provider-zod": "^1.2.0",
     "mongodb": "^6.6.2",
-    "nanoid": "^5.0.7",
+    "nanoid": "^5.0.9",
     "ts-byob": "^1.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
